@@ -1,11 +1,78 @@
-p {
-  background: red;
+.meta {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.meta h1 {
+  order: 2;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 13px;
+}
+
+.meta h2 {
+  order: 1;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 18px;
+}
+
+.deck {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  align-content: stretch;
+}
+
+.deck .left {
+  flex-grow: 0;
+}
+
+.deck .right {
+  flex-grow: 1;
+  position: relative;
+}
+
+.playPauseBtn {
+
+}
+
+.playPauseBtn button {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  width: 65px;
+  height: 65px;
 }
 
 progress-bar {
-  width: 300px;
-  height: 30px;
+  width: 100%;
+  height: 65px;
   display: block;
+  position: relative;
 
   --progress-track-background: #333;
+}
+
+.current-time,
+.maximum-time {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-family: sans-serif;
+  color: white;
+  background: black;
+  padding: 3px;
+  font-size: 12px;
+}
+
+.maximum-time {
+  left: auto;
+  right: 0;
 }

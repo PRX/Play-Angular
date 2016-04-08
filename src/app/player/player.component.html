@@ -1,0 +1,26 @@
+<div class="meta">
+  <h1>{{routeParams.get('artist')}}</h1>
+  <h2>{{routeParams.get('title')}}</h2>
+</div>
+
+<div class="deck">
+  <div class="left">
+    <div class="playPauseBtn">
+      <button
+        *ngIf="paused"
+        (click)="play()"
+        class="playPause playBtn"><i class="fa fa-play fa-4x"></i></button>
+      <button
+        *ngIf="!paused"
+        (click)="pause()"
+        class="playPause pauseBtn"><i class="fa fa-pause fa-4x"></i></button>
+    </div>
+  </div>
+  <div class="right">
+    <progress-bar (seek)="onSeek($event)" (scrubbing)="onHold($event)"
+      (window:keydown)="handleHotkey($event)"
+      [value]="currentTime | async" [maximum]="duration | async"></progress-bar>
+    <time-indicator class="current-time" [seconds]="currentTime | async"></time-indicator>
+    <time-indicator class="maximum-time" [seconds]="duration | async"></time-indicator>
+  </div>
+</div>
