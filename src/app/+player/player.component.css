@@ -1,0 +1,169 @@
+background-img {
+  filter: blur(25px);
+  -webkit-filter: blur(25px);
+  -moz-filter: blur(25px);
+  -o-filter: blur(25px);
+  margin: -25px;
+  /* to account for the white-edge blurring from the filter: blur */
+  min-height: 208px;
+  width: calc(100% + 25px);
+  /* 183px of content (sans border) + 25 to account for the -25px margin */
+  background-size: 100% auto;
+  position: relative;
+  z-index: -1;
+}
+
+content {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+metadata {
+  display: flex;
+}
+
+artwork,
+section {
+  flex-grow: 1;
+}
+
+artwork {
+  position: relative;
+  max-width: 115px;
+  width: 115px;
+  height: 115px;
+  margin: 15px;
+  border-radius: 5px;
+	border: solid 1px #ffffff;
+  background-size: cover;
+}
+
+#large-playback-control-button {
+  position: absolute;
+  top: calc(50% - 30px);
+  left: calc(50% - 30px);
+  display: none;
+}
+
+section {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  margin: 20px 0 15px 0;
+}
+/* this is just to add a commit */
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+h1,
+h2 {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Source Sans Pro";
+  font-weight: normal;
+  color: #ffffff;
+}
+
+h1 {
+	height: 20px;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+h2 {
+	height: 18px;
+	font-size: 14px;
+}
+
+controls {
+  display: flex;
+  justify-content: space-between;
+  max-height: 30px;
+}
+
+buttons {
+  display: flex;
+}
+
+button {
+  min-width: 30px;
+  margin-right: 15px;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  justify-content: center;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+}
+
+nav a {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #368aa2;
+  cursor: pointer;
+}
+
+nav a:hover {
+  color: #1e4e5c;
+}
+
+
+scrubber {
+  display: flex;
+  justify-content: space-around;
+}
+
+progress-bar {
+  cursor: col-resize;
+  flex-basis: 100%;
+  height: 6px;
+  opacity: 0.3;
+  border-radius: 100px;
+  background-color: #ffffff;
+  display: block;
+  margin: 8px 0;
+}
+
+playback-progress,
+duration {
+  text-align: center;
+	font-family: SourceSansPro;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #ffffff;
+}
+
+playback-progress {
+  width: 61px;
+}
+
+duration {
+  width: 47px;
+}
+
+@media (max-height: 185px), (max-width: 299px) {
+  * {
+    display: none !important;
+  }
+}
+
+@media (max-width: 599px) {
+  buttons {
+    display: none;
+  }
+
+  #large-playback-control-button {
+    display: block;
+  }
+}

@@ -1,3 +1,4 @@
+/.ci/
 /.dev/
 /.dist/
 /node_modules/

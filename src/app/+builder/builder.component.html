@@ -1,0 +1,220 @@
+<div class="background-fill"></div>
+
+<a
+  id="preview-toggle"
+  (mouseover)="previewOverlay.style.display = 'block'"
+  (mouseout)="previewOverlay.style.display = 'none'"
+  *ngIf="(feedUrl && embedProps) || (editMode && embedProps)">Preview</a>
+
+<div id="preview-overlay" #previewOverlay style="display: none;">
+  <!-- <iframe
+    #previewHorizontal
+    *ngIf="previewIframeSrc"
+    frameborder="0"
+    height="200"
+    id="preview-horizontal"
+    width="95%"
+    [src]="previewIframeSrc"></iframe> -->
+  <div id="preview-square-wrap">
+    <iframe
+      #previewSquare
+      *ngIf="previewIframeSrc"
+      frameborder="0"
+      height="500"
+      id="preview-square"
+      width="500"
+      [src]="previewIframeSrc"></iframe>
+  </div>
+</div>
+
+<div class="container">
+  <header>
+    <a href="http://www.prx.org/" id="prx-logo"></a>
+  </header>
+
+  <div class="content">
+    <section class="builder-step" id="step-1">
+      <form id="feed-selector">
+        <label for="theFeedUrl">Select podcast</label>
+        <input
+          type="url"
+          id="theFeedUrl"
+          #feedUrlInput
+          required
+          pattern="^http.*"
+          name="theFeedUrl"
+          placeholder="A podcast's RSS feed URL, eg http://example.com/feed.xml">
+        <button type="submit" (click)="onFeedUrlSubmit(feedUrlInput.value)">Submit</button>
+      </form>
+    </section>
+
+    <section class="builder-step" *ngIf="feedUrl" id="step-2">
+      <label for="">Choose an Episode</label>
+      <episode-picker
+        (select)="onEpisodeSelect($event)"
+        [feedUrl]="feedUrl"></episode-picker>
+    </section>
+
+    <section class="builder-step" id="step-3" *ngIf="(feedUrl && embedProps) || (editMode && embedProps)">
+      <h4>Design Your Player</h4>
+      <form
+        [ngFormModel]="propsForm"
+        #propsFormNg="ngForm"
+        id="builder-form">
+
+        <!-- <h4>Basics</h4> -->
+
+        <fieldset>
+          <label for="title">Title</label>
+          <input
+            type="text"
+            [(ngModel)]="embedProps.title"
+            [ngFormControl]="propsForm.controls.title"
+            ngControl="title"
+            id="title"
+            name="title">
+        </fieldset>
+
+        <fieldset>
+          <label for="subtitle">Subtitle</label>
+          <input
+            type="text"
+            [(ngModel)]="embedProps.subtitle"
+            [ngFormControl]="propsForm.controls.subtitle"
+            ngControl="subtitle"
+            id="subtitle"
+            name="subtitle">
+        </fieldset>
+
+        <fieldset>
+          <img src="{{embedProps.imageUrl}}" id="artwork-preview">
+          <label>Artwork URL</label>
+          <input
+            type="text"
+            [(ngModel)]="embedProps.imageUrl"
+            [ngFormControl]="propsForm.controls.imageUrl"
+            ngControl="imageUrl"
+            id="imageUrl"
+            name="imageUrl">
+        </fieldset>
+
+        <fieldset>
+          <label>Audio URL</label>
+          <input
+            type="text"
+            [(ngModel)]="embedProps.audioUrl"
+            [ngFormControl]="propsForm.controls.audioUrl"
+            ngControl="audioUrl"
+            id="audioUrl"
+            name="audioUrl">
+            <audio controls id="audio-preview">
+              <source src="{{embedProps.audioUrl}}" type="audio/mpeg">
+            </audio>
+        </fieldset>
+
+        <fieldset>
+          <label for="subscribeUrl">Subscription URL</label>
+          <input
+            type="text"
+            [(ngModel)]="embedProps.subscribeUrl"
+            [ngFormControl]="propsForm.controls.subscribeUrl"
+            ngControl="subscribeUrl"
+            id="subscribeUrl"
+            name="subscribeUrl">
+          <p>
+            <small>If you provide a URL, a "Subscribe" button will appear in the player. This should be somewhere that makes is easier for people to subscribe to you show, such as the iTunes link for your show or a landing page on your own site.</small>
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <label for="subscribeTarget">Subscribe Button Behavior</label>
+          <select
+            id="subscribeTarget"
+            name="subscribeTarget"
+            [(ngModel)]="embedProps.subscribeTarget"
+            [ngFormControl]="propsForm.controls.subscribeTarget"
+            ngControl="subscribeTarget">
+            <option value="_blank">Open in new tab</option>
+            <option value="_top">Open in the same tab</option>
+          </select>
+          <p>
+            <small>This option only has an effect if you provide a <strong>Subscription URL</strong></small>
+          </p>
+        </fieldset>
+
+        <!-- <fieldset>
+          <label for="ctaUrl">CTA Title</label>
+          <input type="text" [(ngModel)]="embedProps.ctaUrl" [ngFormControl]="specsForm.controls.ctaUrl" ngControl="ctaUrl" id="ctaUrl">
+          <br>
+          <label for="ctaTitle">CTA URL</label>
+          <input type="text" [(ngModel)]="embedProps.ctaTitle" [ngFormControl]="specsForm.controls.ctaTitle" ngControl="ctaTitle" id="ctaTitle">
+        </fieldset> -->
+      </form>
+    </section>
+
+    <section class="builder-step" id="step-4" *ngIf="(feedUrl && embedProps) || (editMode && embedProps)">
+      <h4>Copy and Use Your Embed Code</h4>
+
+      <p>Copy the code for one of the following players, and place it somewhere on your webpage.</p>
+
+      <fieldset>
+        <label for="embed-code-horizontal">Horizontal Player</label>
+        <input
+          type="text"
+          readonly
+          [value]="embedProps.horizontalIframeHtml"
+          id="embed-code-horizontal"
+          name="embedcodehorizontal"
+          #codeInputHorizontal>
+        <button
+          class="copy-code"
+          (mouseover)="resetCopyButton(copyBtnHorizontal)"
+          (click)="copyCode(codeInputHorizontal, copyBtnHorizontal)"
+          #copyBtnHorizontal>Copy</button>
+        <p>
+          <small>This player is 200 pixels tall and fills any available width on the page it's included on.</small>
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <label for="embed-code-square">Square Player</label>
+        <input
+          type="text"
+          readonly
+          [value]="embedProps.squareIframeHtml"
+          id="embed-code-square"
+          name="embedcodesquare"
+          #codeInputSquare>
+        <button
+          class="copy-code"
+          (mouseover)="resetCopyButton(copyBtnSquare)"
+          (click)="copyCode(codeInputSquare, copyBtnSquare)"
+          #copyBtnSquare>Copy</button>
+        <p>
+          <small>A 500 by 500 pixel square player that displays the artwork is large, prominent format.</small>
+        </p>
+      </fieldset>
+    </section>
+
+    <section class="builder-step" id="step-4b" *ngIf="(feedUrl && embedProps) || (editMode && embedProps)">
+      <h4>Advanced Use &amp; Customization</h4>
+      <p>Advanced users may build their own embeddable <code>iframe</code> tags, rather than using one of the two pre-built versions.</p>
+
+      <fieldset>
+        <label for="embed-code-raw">Embed player URL</label>
+        <input
+          type="text"
+          readonly
+          [value]="embedProps.embeddableUrl"
+          id="embed-code-raw"
+          name="embedcoderaw"
+          #codeInputRaw>
+        <button
+          class="copy-code"
+          (mouseover)="resetCopyButton(copyBtnRaw)"
+          (click)="copyCode(codeInputRaw, copyBtnRaw)"
+          #copyBtnRaw>Copy</button>
+      </fieldset>
+    </section>
+  </div>
+</div>

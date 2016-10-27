@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>502053F1-38B0-4679-927B-BECB8B74DE35</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Embedded-Player" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.3">
+        <g id="episode-embed/600px-header" transform="translate(-145.000000, -100.000000)">
+            <g id="episode-embed-header/600px">
+                <g id="controls" transform="translate(145.000000, 100.000000)">
+                    <g id="icon/back-5">
+                        <g>
+                            <g id="arrow-backward" transform="translate(15.000000, 14.500000) scale(-1, 1) translate(-15.000000, -14.500000) translate(1.000000, 0.000000)">
+                                <path d="M28,15 C28,22.732 21.732,29 14,29 C6.268,29 0,22.732 0,15 C0,7.268 6.268,1 14,1 C16.945,1 19.677,1.909 21.932,3.462" id="Stroke-1" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path>
+                                <path d="M24.6376,4.242 C24.9286,4.709 24.7176,5.106 24.1676,5.125 L20.1696,5.262 C19.6206,5.28 19.3816,4.899 19.6406,4.413 L21.5206,0.883 C21.7796,0.397 22.2286,0.382 22.5206,0.848 L24.6376,4.242 Z" id="Fill-3" fill="#FFFFFF"></path>
+                            </g>
+                            <text id="5" font-family="SourceSansPro-Semibold, Source Sans Pro" font-size="12" font-weight="500" line-spacing="18" fill="#FFFFFF">
+                                <tspan x="12.422" y="18">5</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

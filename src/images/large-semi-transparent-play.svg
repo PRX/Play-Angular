@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>A4BE7BB8-FA1D-4489-9E01-3155847B3F7B</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Embedded-Player" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="episode-embed/345px" transform="translate(-43.000000, -43.000000)">
+            <g id="episode-embed-header/345px">
+                <g id="icon/play/large-semi-transparent" transform="translate(43.000000, 43.000000)">
+                    <g>
+                        <path d="M29.7413793,59.4827586 C46.1670895,59.4827586 59.4827586,46.1670895 59.4827586,29.7413793 C59.4827586,13.3156691 46.1670895,0 29.7413793,0 C13.3156691,0 0,13.3156691 0,29.7413793 C0,46.1670895 13.3156691,59.4827586 29.7413793,59.4827586 Z" id="Combined-Shape" fill="#000000" opacity="0.5"></path>
+                        <path d="M23.642428,41.7988876 C22.7353401,42.4335601 22,42.0565659 22,40.948112 L22,19.0491402 C22,17.9445973 22.7255207,17.5568216 23.642428,18.1983646 L38.8651942,28.8494499 C39.7722822,29.4841224 39.7821015,30.5062594 38.8651942,31.1478023 L23.642428,41.7988876 Z" id="Triangle-1" fill="#FFFFFF"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

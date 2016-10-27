@@ -1,4 +1,4 @@
-import {DovetailAudio} from './dovetail_audio';
+import { DovetailAudio } from './dovetail_audio';
 
 // UA-164824-54
 

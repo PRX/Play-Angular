@@ -1,0 +1,6 @@
+<select
+  (change)="selectEpisode(select.value)"
+  #select>
+  <option value="">Select an episode</option>
+  <option *ngFor="let ep of episodes | async" [value]="ep.guid">{{ep.title}}</option>
+</select>

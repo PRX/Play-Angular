@@ -1,4 +1,4 @@
-import {DovetailAudio} from './dovetail_audio';
+import { DovetailAudio } from './dovetail_audio';
 
 export class DovetailAudioEvent {
   static build(eventName: string, audio: DovetailAudio, extras?: {}) {

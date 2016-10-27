@@ -1,0 +1,59 @@
+
+<background-img [style.background-image]="artworkUrl"></background-img>
+  <content>
+    <metadata>
+      <artwork [style.background-image]="artworkUrl">
+        <button (click)="togglePlayPause()" id="large-playback-control-button">
+          <img src="/images/large-semi-transparent-play.svg" alt="" *ngIf="player.paused">
+          <img src="/images/large-semi-transparent-pause.svg" alt="" *ngIf="!player.paused">
+        </button>
+      </artwork>
+      <section>
+        <header>
+          <h1 [title]="title">{{title}}</h1>
+          <h2 [title]="subtitle">{{subtitle}}</h2>
+        </header>
+        <controls>
+          <buttons (window:keydown)="handleHotkey($event)">
+            <button (click)="seekBy(-10)" id="rewind-control-button">
+              <img src="/images/back-5.svg" alt="">
+            </button>
+            <button (click)="togglePlayPause()" id="playback-control-button">
+              <img src="/images/play.svg" alt="" *ngIf="player.paused">
+              <img src="/images/pause.svg" alt="" *ngIf="!player.paused">
+            </button>
+            <button (click)="seekBy(30)" id="forward-control-button">
+              <img src="/images/forward-30.svg" alt="">
+            </button>
+
+            <!-- <button (click)="cyclePlaybackRate()" id="playback-rate-control-button">
+            <div *ngIf="player.playbackRate === 1">1<span>✕</span></div>
+            <div *ngIf="player.playbackRate === 1.25">1.25<span>✕</span></div>
+            <div *ngIf="player.playbackRate === 1.5">1.5<span>✕</span></div>
+            <div *ngIf="player.playbackRate === 2">2<span>✕</span></div>
+          </button> -->
+          </buttons>
+
+          <nav>
+            <a [href]="subscribeUrl" *ngIf="subscribeUrl" [target]="subscribeTarget">
+              <!-- note: appearance is provided download button SVG, but should be subscribe -->
+              <img src="/images/download.svg" alt="">
+            </a>
+            <a (click)="showShareModal()">
+              <img src="/images/share.svg" alt="">
+            </a>
+          </nav>
+        </controls>
+      </section>
+    </metadata>
+
+    <scrubber (window:keydown)="handleHotkey($event)">
+      <playback-progress>{{currentTime | async | duration}}</playback-progress>
+      <progress-bar
+        [value]="currentTime | async"
+        [maximum]="duration | async"
+        (seek)="onSeek($event)"
+        (scrubbing)="onScrub($event)"></progress-bar>
+      <duration>{{duration | async | duration}}</duration>
+    </scrubber>
+  </content>

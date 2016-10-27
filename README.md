@@ -1,4 +1,5 @@
-# embed.prx.org
-Embed player
+# play.prx.org
 
-`jspm bundle src/main - src/app ./.build/vendor.js --inject`
+### NPM scripts
+
+This app uses docker now!

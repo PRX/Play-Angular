@@ -1,64 +1,92 @@
 {
-  "name": "embed.prx.org",
-  "version": "0.0.2",
-  "description": "",
+  "name": "play.prx.org",
+  "version": "0.1.0",
+  "description": "PRX embed audio player",
   "keywords": [
     "PRX",
-    "Embed"
+    "Play"
   ],
-  "homepage": "http://embed.prx.org",
-  "bugs": "https://github.com/PRX/embed.prx.org/issues",
+  "homepage": "http://play.prx.org",
+  "bugs": "https://github.com/PRX/play.prx.org/issues",
   "license": "MIT",
   "author": "PRX, Inc. <help@prx.org> (http://www.prx.org)",
   "contributors": [
     "Chris Kalafarski <chris.kalafarski@prx.org>",
     "Chris Rhoden <chris@prx.org>"
   ],
-  "repository": "https://github.com/PRX/embed.prx.org.git",
+  "repository": "https://github.com/PRX/play.prx.org.git",
   "scripts": {
-    "deploy": "gulp deploy",
-    "git:hooks:pre-commit": "gulp git:hooks:pre-commit",
-    "start": "gulp start",
-    "start:dist": "gulp start:dist",
-    "test": "gulp test",
-    "postinstall": "gulp postinstall"
+    "clean": "rm -Rf ./.ci ./.dev ./.dist ./jspm_packages ./node_modules ./typings",
+    "jspm:bundle": "if [ $NODE_ENV = 'development' ]; then npm run jspm:bundle:dev; else npm run jspm:bundle:dist; fi",
+    "jspm:bundle:dev": "jspm bundle src/app/main - [src/app/**/*] - [src/lib/**/*] - [src/javascript/**/*] ./.dev/vendor.js --inject",
+    "jspm:bundle:dist": "jspm bundle-sfx src/app/main ./.dist/scripts/embed.min.js --inject --minify --no-mangle",
+    "jspm:install": "jspm install",
+    "npm:cache:clean": "npm cache clean",
+    "postinstall": "if [ $NODE_ENV = 'development' ]; then npm run postinstall:dev; else npm run postinstall:dist; fi",
+    "postinstall:dev": "npm run jspm:install && npm run typings:install",
+    "postinstall:dist": "npm run jspm:bundle && npm run npm:cache:clean",
+    "prestart:dev": "npm run jspm:bundle",
+    "prestart:dist": "",
+    "start": "if [ $NODE_ENV = 'development' ]; then npm run start:dev; else npm run start:dist; fi",
+    "start:dev": "node ./server/dev.js",
+    "start:dist": "node ./server/dist.js",
+    "start:test": "",
+    "test": "echo SKIP TEST",
+    "xtest": "if [ $NODE_ENV = 'development' ]; then npm run test:dev; else npm run test:ci; fi",
+    "test:ci": "karma start ./config/karma.ci.js --log-level debug --single-run",
+    "test:dev": "karma start ./config/karma.dev.js --log-level debug --single-run",
+    "typings:install": "typings install",
+    "x:deps": "npm i rxjs@5.0.0-beta.6 @angular/core @angular/common @angular/common @angular/compiler @angular/forms @angular/http @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/router-deprecated"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "angular2": "^2.0.0-beta.7",
-    "gulp": "^3.9.1",
-    "gulp-bump": "^2.1.0",
-    "gulp-file": "^0.2.0",
-    "gulp-jade": "^1.1.0",
-    "gulp-jspm": "^0.5.7",
-    "gulp-rename": "^1.2.2",
-    "gulp-s3": "^0.3.0",
-    "gulp-s3-upload": "^1.5.1",
-    "gulp-shell": "^0.5.2",
-    "gulp-sourcemaps": "^1.6.0",
+  "dependencies": {
+    "express": "^4.14.0",
     "jasmine-core": "^2.4.1",
-    "jspm": "^0.16.30",
-    "lite-server": "^2.1.0",
-    "run-sequence": "^1.1.5",
-    "rxjs": "^5.0.0-beta.2",
+    "jspm": "^0.16.39",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-jasmine": "^1.0.2",
+    "karma-jspm": "^2.1.0",
+    "karma-phantomjs-launcher": "1.0.0",
+    "karma-spec-reporter": "0.0.26",
+    "phantomjs-prebuilt": "^2.1.7",
+    "pug": "^2.0.0-beta3",
     "typescript": "^1.8.9",
-    "typings": "^0.7.3"
+    "typings": "^1.3.0"
   },
+  "devDependencies": {},
   "engines": {
-    "node": "^5.9.0"
+    "node": "^6.0.0"
   },
   "jspm": {
     "configFile": "config/systemjs.config.js",
     "dependencies": {
-      "angular2": "npm:angular2@^2.0.0-beta.13",
-      "plugin-typescript": "github:frankwallis/plugin-typescript@^4.0.1",
+      "@angular/common": "npm:@angular/common@^2.0.0-rc.4",
+      "@angular/compiler": "npm:@angular/compiler@^2.0.0-rc.4",
+      "@angular/core": "npm:@angular/core@^2.0.0-rc.4",
+      "@angular/forms": "npm:@angular/forms@^0.2.0",
+      "@angular/http": "npm:@angular/http@^2.0.0-rc.4",
+      "@angular/platform-browser": "npm:@angular/platform-browser@^2.0.0-rc.4",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.0.0-rc.4",
+      "@angular/router": "npm:@angular/router@^3.0.0-beta.2",
+      "@angular/router-deprecated": "npm:@angular/router-deprecated@^2.0.0-rc.2",
+      "@angular/upgrade": "npm:@angular/upgrade@^2.0.0-rc.4",
+      "core-js": "npm:core-js@^2.4.0",
+      "jspm/nodelibs-crypto": "github:jspm/nodelibs-crypto@^0.1.0",
+      "plugin-typescript": "github:frankwallis/plugin-typescript@^4.0.16",
       "reflect-metadata": "npm:reflect-metadata@^0.1.3",
-      "rxjs": "npm:rxjs@^5.0.0-beta.4",
-      "ts": "github:frankwallis/plugin-typescript@^4.0.1",
-      "zone.js": "npm:zone.js@^0.6.6"
+      "rxjs": "npm:rxjs@^5.0.0-beta.6",
+      "ts": "github:frankwallis/plugin-typescript@^4.0.16",
+      "zone.js": "npm:zone.js@^0.6.12"
     },
     "devDependencies": {
-      "typescript": "npm:typescript@^1.8.2"
+      "ts-runtime": "npm:babel-runtime@^5.8.24",
+      "typescript": "npm:typescript@^1.6.2"
+    },
+    "overrides": {
+      "npm:reflect-metadata@0.1.3": {
+        "map": {},
+        "jspmNodeConversion": true
+      }
     }
   }
 }

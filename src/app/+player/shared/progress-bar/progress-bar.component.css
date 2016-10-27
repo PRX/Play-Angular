@@ -1,0 +1,27 @@
+bar {
+  background: #999999;
+  display: block;
+  height: 100%;
+  pointer-events: none;
+}
+bar.disabled {
+  background: rgb(235, 255, 0);
+}
+
+highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.0);
+  border-right: 1px solid #444;
+  pointer-events: none;
+}
+
+scrub-detector {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

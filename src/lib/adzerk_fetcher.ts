@@ -1,4 +1,4 @@
-import {AdzerkRequest, AdzerkResponse} from './adzerk';
+import { AdzerkRequest, AdzerkResponse } from './adzerk';
 
 const API_ENDPOINT = 'https://engine.adzerk.net/api/v2';
 const POST = 'POST';

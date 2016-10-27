@@ -1,0 +1,17 @@
+<button class="close-btn" (click)="close()">✖</button>
+<h1>Use this player on your site</h1>
+<p>You can embed this player on your own site by including the following <code>iframe</code> tag.</p>
+
+<div class="embed-code">
+  <strong>Horizontal</strong>
+  <input type="text" [value]="horizontalCode" id="share-embed-small" readonly>
+  <button (mouseover)="reset(small)" (click)="copy(small)" data-copytarget="#share-embed-small" #small>Copy</button>
+</div>
+
+<div class="embed-code">
+  <strong>500×500</strong>
+  <input type="text" [value]="squareCode" id="share-embed-square" readonly>
+  <button (mouseover)="reset(square)" (click)="copy(square)" data-copytarget="#share-embed-square" #square>Copy</button>
+</div>
+
+<a [href]="customizeHref" id="customize-btn" target="_blank">Customize this player</a>

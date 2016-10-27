@@ -1,0 +1,8 @@
+<bar
+  [class.disabled]="isDisabled"
+  [style.width.%]="progress * 100.0"></bar>
+<highlight
+  *ngIf="isHover && !isScrubbing && !isDisabled"
+  [style.width.%]="provisionalProgress * 100.0"></highlight>
+<scrub-detector
+  *ngIf="isScrubbing"></scrub-detector>

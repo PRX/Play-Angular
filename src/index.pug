@@ -1,0 +1,26 @@
+html(lang='en')
+  head
+    base(href='.')
+    title Embed
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/stylesheets/main.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Open+Sans')
+
+
+    if !locals.dist
+      script(src='/jspm_packages/system.js')
+      script(src='/config/systemjs.config.js')
+      script.
+        System.import('src/app/main').then(null, console.error.bind(console));
+
+    script.
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-164824-54', 'auto');
+    script(async src='https://www.google-analytics.com/analytics.js')
+
+  body
+    app
+    if locals.dist
+      script(src='/scripts/embed.min.js')

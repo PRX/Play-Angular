@@ -1,9 +1,9 @@
-import {AdzerkRequest, AdzerkResponse} from './adzerk';
-import {AdzerkFetcher} from './adzerk_fetcher';
-import {ExtendableAudio} from '../javascript/extendable_audio';
-import {DovetailFetcher, DovetailResponse} from './dovetail_fetcher';
-import {DovetailAudioEvent} from './dovetail_audio_event';
-import {DovetailArrangement, DovetailArrangementEntry} from './dovetail_arrangement';
+import { AdzerkRequest, AdzerkResponse } from './adzerk';
+import { AdzerkFetcher } from './adzerk_fetcher';
+import { ExtendableAudio } from '../javascript/extendable_audio';
+import { DovetailFetcher, DovetailResponse } from './dovetail_fetcher';
+import { DovetailAudioEvent } from './dovetail_audio_event';
+import { DovetailArrangement, DovetailArrangementEntry } from './dovetail_arrangement';
 
 type AllUnion = [
   DovetailResponse | PromiseLike<DovetailResponse>,
