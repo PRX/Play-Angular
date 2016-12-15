@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, Output, OnInit, OnChanges } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { Observable, Observer } from 'rxjs';
+import 'player.js';
 
 import { DovetailAudio } from '../dovetail';
 import { Logger } from '../logger';
 
 const SEGMENT_TYPE = 'segmentType';
+const playerjsAdapter = window['playerjs']['HTML5Adapter']
 
 @Component({
   selector: 'play-player',
@@ -66,6 +68,7 @@ export class PlayerComponent implements OnInit, OnChanges {
     } else {
       this.logoSrc = '';
     }
+    playerjsAdapter(this.player).ready();
   }
 
   ngOnChanges(changes: any) {
