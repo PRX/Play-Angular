@@ -50,6 +50,11 @@ export class PlayerComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.player = new DovetailAudio(this.audioUrl);
     this.player.addEventListener('segmentstart', e => this.currentSegmentType = e[SEGMENT_TYPE]);
+    this.player.addEventListener('ended', e => {
+      console.log('resetting src')
+      this.player.src = 'https://dovetail.prxu.org/40/561076e7-a0e8-4d62-93bc-7b34c9d35ce2/Owning_The_Clouds_Transistor.mp3';
+      // this.player.play();
+    })
     this.logger = new Logger(this.player, this.title, this.subtitle);
 
     this.artworkSafe = this.sanitizer.bypassSecurityTrustStyle(`url('${this.artworkUrl}')`);
