@@ -33,7 +33,7 @@ export class FeedAdapter implements DataAdapter {
 
   processFeed(feedUrl: string, episodeGuid?: string, showPlaylist?: boolean): Observable<AdapterProperties> {
     return this.fetchFeed(feedUrl).map(body => {
-      let props = this.parseFeed(body, episodeGuid);
+      let props = this.parseFeed(body, episodeGuid, showPlaylist);
       if (showPlaylist) {
         props.showPlaylist = true;
       }
@@ -58,11 +58,15 @@ export class FeedAdapter implements DataAdapter {
     });
   }
 
-  parseFeed(xml: string, episodeGuid?: string): AdapterProperties {
+  parseFeed(xml: string, episodeGuid?: string, showPlaylist?: boolean): AdapterProperties {
     let parser = new DOMParser();
     let doc = <XMLDocument> parser.parseFromString(xml, 'application/xml');
     let props = this.processDoc(doc);
 
+    if (showPlaylist) {
+      let episodes = this.parseFeedEpisodes(doc);
+      props.episodes = episodes;
+    }
     let episode = this.parseFeedEpisode(doc, episodeGuid);
     if (episode) {
       props = this.processEpisode(episode, props);
@@ -91,6 +95,11 @@ export class FeedAdapter implements DataAdapter {
     } else if (items.length > 0) {
       return items[0];
     }
+  }
+
+  parseFeedEpisodes(doc: XMLDocument): AdapterProperties[] {
+    let episodes = Array.from(doc.querySelectorAll('item'));
+    return episodes.map(item => this.processEpisode(item));
   }
 
   processDoc(doc: XMLDocument, props: AdapterProperties = {}): AdapterProperties {
