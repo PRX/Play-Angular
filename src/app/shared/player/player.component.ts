@@ -24,6 +24,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   @Input() subscribeTarget: string;
   @Input() artworkUrl: string;
   @Input() feedArtworkUrl: string;
+  @Input() episodes: any[];
   @Output() share = new EventEmitter<boolean>();
 
   artworkSafe: SafeStyle;

@@ -62,3 +62,4 @@
     <span class="duration" [class.loaded]="duration | async ">{{duration | async | duration}}</span>
   </div>
 </content>
+<play-playlist *ngIf="episodes" [episodes]="episodes"></play-playlist>
