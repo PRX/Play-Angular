@@ -38,6 +38,8 @@ export class PlayerComponent implements OnInit, OnChanges {
   private isUnrestricted: boolean;
   private isScrubbing: boolean;
 
+  private episodeIndex: number;
+
   // True if playback is being held until seeking is completed
   private isHeld: boolean;
 
@@ -49,13 +51,23 @@ export class PlayerComponent implements OnInit, OnChanges {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
+    this.episodeIndex = 0;
     this.player = new DovetailAudio(this.audioUrl);
     this.player.addEventListener('segmentstart', e => this.currentSegmentType = e[SEGMENT_TYPE]);
     this.player.addEventListener('ended', e => {
-      console.log('resetting src')
-      this.player.src = 'https://dovetail.prxu.org/40/561076e7-a0e8-4d62-93bc-7b34c9d35ce2/Owning_The_Clouds_Transistor.mp3';
-      // this.player.play();
-    })
+      if (this.episodes && this.episodes.length > 0) {
+        console.log('moving to next episode');
+        this.episodeIndex++;
+        let newEpisode = this.episodes[this.episodeIndex];
+        if (newEpisode) {
+          this.title = newEpisode.title;
+          this.player.src = newEpisode.audioUrl;
+          this.player.play();
+        } else {
+          console.log('fin');
+        }
+      }
+    });
     this.logger = new Logger(this.player, this.title, this.subtitle);
 
     this.artworkSafe = this.sanitizer.bypassSecurityTrustStyle(`url('${this.artworkUrl}')`);
