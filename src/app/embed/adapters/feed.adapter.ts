@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
-import { EMBED_FEED_URL_PARAM, EMBED_EPISODE_GUID_PARAM } from './../embed.constants';
+import {
+  EMBED_FEED_URL_PARAM,
+  EMBED_EPISODE_GUID_PARAM,
+  EMBED_SHOW_PLAYLIST_PARAM
+} from './../embed.constants';
 import { AdapterProperties, DataAdapter } from './adapter.properties';
 import { sha1 }  from './sha1';
 
@@ -19,16 +23,20 @@ export class FeedAdapter implements DataAdapter {
   getProperties(params): Observable<AdapterProperties> {
     let feedUrl = params[EMBED_FEED_URL_PARAM];
     let episodeGuid = params[EMBED_EPISODE_GUID_PARAM];
+    let showPlaylist = typeof params[EMBED_SHOW_PLAYLIST_PARAM] !== 'undefined';
     if (feedUrl) {
-      return this.processFeed(feedUrl, episodeGuid);
+      return this.processFeed(feedUrl, episodeGuid, showPlaylist);
     } else {
       return Observable.of({});
     }
   }
 
-  processFeed(feedUrl: string, episodeGuid?: string): Observable<AdapterProperties> {
+  processFeed(feedUrl: string, episodeGuid?: string, showPlaylist?: boolean): Observable<AdapterProperties> {
     return this.fetchFeed(feedUrl).map(body => {
       let props = this.parseFeed(body, episodeGuid);
+      if (showPlaylist) {
+        props.showPlaylist = true;
+      }
       Object.keys(props).filter(k => props[k] === undefined).forEach(key => delete props[key]);
       return props;
     }).catch(err => {

@@ -20,12 +20,15 @@ const PYM_CHILD_ID_PARAM = 'childId';
       [subscribeUrl]="subscribeUrl" [subscribeTarget]="subscribeTarget"
       [artworkUrl]="artworkUrl" (share)="showModal()">
     </play-player>
+    <play-playlist *ngIf="showPlaylist">
+    </play-playlist>
   `
 })
 
 export class EmbedComponent implements OnInit {
 
   showShareModal = false;
+  showPlaylist = false;
 
   // player params
   audioUrl: string;
@@ -58,6 +61,7 @@ export class EmbedComponent implements OnInit {
   }
 
   private assignEpisodePropertiesToPlayer(properties: AdapterProperties) {
+    this.showPlaylist = (properties.showPlaylist || this.showPlaylist);
     this.audioUrl = ( properties.audioUrl || this.audioUrl );
     this.title = ( properties.title || this.title );
     this.subtitle = ( properties.subtitle || this.subtitle );
