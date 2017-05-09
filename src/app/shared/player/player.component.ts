@@ -38,6 +38,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   private isUnrestricted: boolean;
   private isScrubbing: boolean;
 
+  // for playlist feature
   private episodeIndex: number;
 
   // True if playback is being held until seeking is completed
@@ -58,14 +59,7 @@ export class PlayerComponent implements OnInit, OnChanges {
       if (this.episodes && this.episodes.length > 0) {
         console.log('moving to next episode'); // TODO remove console.logs
         this.episodeIndex++;
-        let newEpisode = this.episodes[this.episodeIndex];
-        if (newEpisode) {
-          this.title = newEpisode.title;
-          this.player.src = newEpisode.audioUrl;
-          this.player.play();
-        } else {
-          console.log('fin');
-        }
+        this.updatePlayingEpisode(this.episodeIndex);
       }
     });
     this.logger = new Logger(this.player, this.title, this.subtitle);
@@ -127,6 +121,23 @@ export class PlayerComponent implements OnInit, OnChanges {
     } else if (!scrubbing && this.isHeld) {
       this.player.play();
       this.isHeld = false;
+    }
+  }
+
+  onPlaylistItemClicked(index: number) {
+    this.updatePlayingEpisode(index);
+  }
+
+  updatePlayingEpisode(index: number) {
+    let newEpisode = this.episodes[index];
+    if (newEpisode) {
+      this.episodeIndex = index;
+      this.title = newEpisode.title;
+      this.artworkUrl = newEpisode.artworkUrl;
+      this.audioUrl = this.player.src = newEpisode.audioUrl;
+      this.player.play();
+    } else {
+      console.log('fin');
     }
   }
 

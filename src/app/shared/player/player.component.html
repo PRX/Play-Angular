@@ -62,4 +62,4 @@
     <span class="duration" [class.loaded]="duration | async ">{{duration | async | duration}}</span>
   </div>
 </content>
-<play-playlist *ngIf="episodes && episodes.length" [episodes]="episodes" [subtitle]="subtitle"></play-playlist>
+<play-playlist *ngIf="episodes && episodes.length" [episodes]="episodes" [subtitle]="subtitle" [episodeIndex]="episodeIndex" (playlistItemClicked)="onPlaylistItemClicked($event)" [playing]="!player.paused"></play-playlist>
