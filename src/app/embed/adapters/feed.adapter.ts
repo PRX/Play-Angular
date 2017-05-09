@@ -34,9 +34,6 @@ export class FeedAdapter implements DataAdapter {
   processFeed(feedUrl: string, episodeGuid?: string, showPlaylist?: boolean): Observable<AdapterProperties> {
     return this.fetchFeed(feedUrl).map(body => {
       let props = this.parseFeed(body, episodeGuid, showPlaylist);
-      if (showPlaylist) {
-        props.showPlaylist = true;
-      }
       Object.keys(props).filter(k => props[k] === undefined).forEach(key => delete props[key]);
       return props;
     }).catch(err => {

@@ -56,7 +56,7 @@ export class PlayerComponent implements OnInit, OnChanges {
     this.player.addEventListener('segmentstart', e => this.currentSegmentType = e[SEGMENT_TYPE]);
     this.player.addEventListener('ended', e => {
       if (this.episodes && this.episodes.length > 0) {
-        console.log('moving to next episode');
+        console.log('moving to next episode'); // TODO remove console.logs
         this.episodeIndex++;
         let newEpisode = this.episodes[this.episodeIndex];
         if (newEpisode) {
