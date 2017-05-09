@@ -22,6 +22,7 @@ export interface AdapterProperties {
   feedArtworkUrl?: string;
   showPlaylist?: boolean;
   episodes?: Array<AdapterProperties>;
+  index?: number;
 }
 
 export interface DataAdapter {

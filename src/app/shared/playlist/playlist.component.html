@@ -1,25 +1,22 @@
 <div class="playlist-container">
-<h1>PLAYLIST COMPONENT</h1>
   <header class="playlist-info">
-    <p>{{episodes.length}} episodes</p>
-    <p>Duration of total playlist TK</p>
+    <em>{{episodes.length}} episodes</em>
+    <small>Duration tk</small>
   </header>
-  <ul class="playlist-list">
-    <li class="playlist-entry" *ngFor="let episode of episodes; let i = index">
-      <p class="playlist-position">
-        {{ i + 1 }}
-      </p>
-      <img *ngIf="episode.artworkUrl" [src]="episode.artworkUrl" />
-      <div class="title-container">
-        <div class="title">
+  <ol class="playlist-list">
+    <li class="playlist-entry" *ngFor="let episode of episodes">
+      <small class="index">{{ episode.index + 1 }}</small>
+      <!-- <img *ngIf="episode.artworkUrl" [src]="episode.artworkUrl" /> -->
+      <div class="title-block">
+        <h2 class="title">
           {{ episode.title }}
-        </div>
+        </h2>
         <div class="subtitle">
-          {{ episode.subtitle }}
+          {{ subtitle }}
         </div>
       </div>
-      <p class="duration">
+      <small class="duration">
         duration tk
-      </p>
+      </small>
     </li>
-  </ul>
+  </ol>

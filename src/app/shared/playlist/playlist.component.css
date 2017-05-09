@@ -1,6 +1,65 @@
-.playlist {
+/* Reset */
+ol {
+  list-style: none;
+}
+header, div, h2, em, small, ol, li, img {
+  font-family: 'Open Sans', sans-serif;
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.playlist-container {
   background: white;
   width: 100%;
   position: absolute;
   top: 185px;
+  display: flex;
+  flex-direction: column;
+}
+.playlist-info {
+  margin: 10px;
+  color: grey;
+}
+.playlist-info > em {
+  font-weight: bolder;
+}
+.playlist-info > em:after {
+  padding-left: 10px;
+  padding-right: 10px;
+  font-weight: lighter;
+  content: '\00B7';
+}
+.playlist-list {
+  display: flex;
+  flex-direction: column;
+}
+.playlist-entry {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid lightgrey;
+}
+.playlist-entry > img {
+  width: 30px;
+  max-width: 30px;
+  height: 30px;
+  flex-basis: 15%;
+}
+.playlist-entry > .title-block {
+  flex-basis: 70%;
+}
+h2 {
+  font-weight: bold;
+  font-size: 16px;
+}
+small {
+  color: grey;
+  font-weight: lighter;
+}
+.playlist-entry > .duration {
+  flex-basis: 10%;
 }

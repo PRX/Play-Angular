@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
 
 export class PlaylistComponent {
   @Input() episodes: Array<any>;
+  @Input() subtitle: string;
   // @Input() duration: string;
   // @Input() length: number;
 

@@ -96,7 +96,11 @@ export class FeedAdapter implements DataAdapter {
 
   parseFeedEpisodes(doc: XMLDocument): AdapterProperties[] {
     let episodes = Array.from(doc.querySelectorAll('item'));
-    return episodes.map(item => this.processEpisode(item));
+    return episodes.map((item, index ) => {
+      let props = this.processEpisode(item);
+      props.index = index;
+      return props;
+    });
   }
 
   processDoc(doc: XMLDocument, props: AdapterProperties = {}): AdapterProperties {
