@@ -57,7 +57,6 @@ export class PlayerComponent implements OnInit, OnChanges {
     this.player.addEventListener('segmentstart', e => this.currentSegmentType = e[SEGMENT_TYPE]);
     this.player.addEventListener('ended', e => {
       if (this.episodes && this.episodes.length > 0) {
-        console.log('moving to next episode'); // TODO remove console.logs
         this.episodeIndex++;
         this.updatePlayingEpisode(this.episodeIndex);
       }
@@ -135,7 +134,8 @@ export class PlayerComponent implements OnInit, OnChanges {
       this.title = newEpisode.title;
       this.artworkUrl = newEpisode.artworkUrl;
       this.audioUrl = this.player.src = newEpisode.audioUrl;
-      this.player.play();
+      setTimeout(() => this.player.play(), 10);
+      // patch to reduce unsupported media error. race condition somewhere, sometimes.
     } else {
       console.log('fin');
     }

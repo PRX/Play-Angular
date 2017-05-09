@@ -149,6 +149,7 @@ export class DovetailAudio extends ExtendableAudio {
   set src(url: string) {
     this.index = -1;
     if (this.dovetailFetcher.transform(url)) {
+      this._dovetailLoading = true;
       this._dovetailOriginalUrl = url;
       url += (url.indexOf('?') < 0 ? '?' : '&') + 'debug';
     }
