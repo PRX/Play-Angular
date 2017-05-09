@@ -3,11 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'play-playlist',
   styleUrls: ['playlist.component.css'],
-  template: `
-  <div class="playlist">
-  <h1>PLAYLIST COMPONENT</h1>
-    <div *ngFor="let episode of episodes">{{episode.title}}</div>
-  </div>`
+  templateUrl: 'playlist.component.html'
 })
 
 export class PlaylistComponent {
