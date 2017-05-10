@@ -3,25 +3,24 @@
     <em>{{episodes.length}} episodes</em>
     <small>Duration tk</small>
   </header>
-  <ol class="playlist-list">
+  <ol>
     <li class="playlist-entry" (click)="playlistItemClicked.emit(episode.index)" *ngFor="let episode of episodes">
-      <button *ngIf="(episode.index) == episodeIndex">
-        <img src="/assets/images/large-semi-transparent-play.svg" alt="" *ngIf="!playing">
-        <img class="pauseButton" src="/assets/images/large-semi-transparent-pause.svg" alt="" *ngIf="playing">
-      </button>
-      <small *ngIf="(episode.index) != episodeIndex"class="index">
+      <small>
         {{ episode.index + 1 }}
       </small>
-      <!-- <img *ngIf="episode.artworkUrl" [src]="episode.artworkUrl" /> -->
-      <div class="title-block">
-        <h2 class="title">
+      <div class="entry-img">
+        <img class="ep-art" [src]="episode.artworkUrl || feedArtworkUrl"/>
+        <img  *ngIf="(episode.index) == episodeIndex && playing" class="pauseButton" src="/assets/images/large-semi-transparent-pause.svg" alt="" />
+      </div>
+      <div class="entry-title">
+        <h2>
           {{ episode.title }}
         </h2>
-        <div class="subtitle">
+        <div>
           {{ subtitle }}
         </div>
       </div>
-      <small class="duration">
+      <small>
         duration tk
       </small>
     </li>
