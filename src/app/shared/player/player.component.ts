@@ -124,8 +124,12 @@ export class PlayerComponent implements OnInit, OnChanges {
     }
   }
 
-  onPlaylistItemClicked(index: number) {
-    this.updatePlayingEpisode(index);
+  navigatePlaylist(index: number) {
+    if (this.episodeIndex === index) {
+      this.togglePlayPause();
+    } else {
+      this.updatePlayingEpisode(index);
+    }
   }
 
   updatePlayingEpisode(index: number) {
