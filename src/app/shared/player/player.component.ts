@@ -31,6 +31,9 @@ export class PlayerComponent implements OnInit, OnChanges {
   feedArtworkSafe: SafeStyle;
   artworkSafeLoaded: SafeStyle;
 
+  // for playlist feature
+  episodeIndex: number;
+
   private player: DovetailAudio;
   private logger: Logger;
 
@@ -38,8 +41,6 @@ export class PlayerComponent implements OnInit, OnChanges {
   private isUnrestricted: boolean;
   private isScrubbing: boolean;
 
-  // for playlist feature
-  private episodeIndex: number;
 
   // True if playback is being held until seeking is completed
   private isHeld: boolean;
@@ -155,6 +156,10 @@ export class PlayerComponent implements OnInit, OnChanges {
 
   artworkLoaded() {
     this.artworkSafeLoaded = this.artworkSafe;
+  }
+
+  isPaused() {
+    return this.player.paused;
   }
 
   handleHotkey(event: KeyboardEvent): void {

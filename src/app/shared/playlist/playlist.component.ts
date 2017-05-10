@@ -11,6 +11,7 @@ export class PlaylistComponent {
   @Input() subtitle: string;
   @Input() episodeIndex: number;
   @Input() playing: boolean;
+  @Input() channelArtwork: string;
   @Output() playlistItemClicked = new EventEmitter<number>();
 
   // @Input() duration: string;
