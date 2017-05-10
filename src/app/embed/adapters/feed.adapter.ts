@@ -115,6 +115,8 @@ export class FeedAdapter implements DataAdapter {
     props.audioUrl = this.getTagTextNS(item, 'feedburner', 'origEnclosureLink')
                   || this.getTagAttribute(item, 'enclosure', 'url');
     props.artworkUrl = this.getTagAttributeNS(item, 'itunes', 'image', 'href');
+    let duration = this.getTagTextNS(item, 'itunes', 'duration');
+    props.duration = this.durationInSec(duration);
     return props;
   }
 
@@ -161,6 +163,18 @@ export class FeedAdapter implements DataAdapter {
     let found = el.getElementsByTagNameNS(namespace, tag);
     if (found.length) {
       return found[0].getAttribute(attr);
+    }
+  }
+
+  protected durationInSec(duration: string): number {
+    if (duration.match(/:/)) {
+      let seconds = 0;
+      duration.split(':').reverse().forEach((time, index) => {
+        seconds += +time * 60 ** index;
+      });
+      return seconds;
+    } else {
+      return +duration;
     }
   }
 

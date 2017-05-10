@@ -16,5 +16,8 @@ export class PlaylistComponent {
 
   // @Input() duration: string;
   // @Input() length: number;
+  get totalDuration(): number {
+    return this.episodes.reduce((accum, ep) => accum + +ep.duration, 0);
+  }
 
 }

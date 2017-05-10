@@ -13,6 +13,7 @@ export const PropNames = [
 
 export interface AdapterProperties {
   audioUrl?: string;
+  duration?: number;
   title?: string;
   subtitle?: string;
   subscribeUrl?: string;

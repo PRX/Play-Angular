@@ -139,7 +139,7 @@ export class PlayerComponent implements OnInit, OnChanges {
       this.title = newEpisode.title;
       this.artworkUrl = newEpisode.artworkUrl;
       this.audioUrl = this.player.src = newEpisode.audioUrl;
-      setTimeout(() => this.player.play(), 10);
+      setTimeout(() => this.player.play(), 200);
       // patch to reduce unsupported media error. race condition somewhere, sometimes.
     } else {
       console.log('fin');
