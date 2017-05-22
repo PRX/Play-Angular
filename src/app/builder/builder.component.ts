@@ -22,6 +22,7 @@ export class BuilderComponent implements OnInit {
   previewIframeSrc: SafeResourceUrl;
   editMode = false;
   playLatest = false;
+  playPlaylist = false;
   feedError = false;
 
   @ViewChild('builderForm') builderForm;
@@ -60,6 +61,10 @@ export class BuilderComponent implements OnInit {
     if (this.playLatest) {
       this.props.episodeGuid = '';
     }
+  }
+
+  togglePlayPlaylist() {
+    this.playPlaylist = !this.playPlaylist;
   }
 
   setEmptyDefaults() {

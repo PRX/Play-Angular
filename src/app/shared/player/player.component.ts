@@ -41,7 +41,6 @@ export class PlayerComponent implements OnInit, OnChanges {
   private isUnrestricted: boolean;
   private isScrubbing: boolean;
 
-
   // True if playback is being held until seeking is completed
   private isHeld: boolean;
 

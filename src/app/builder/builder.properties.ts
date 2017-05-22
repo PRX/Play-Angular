@@ -1,7 +1,8 @@
 import { EMBED_FEED_URL_PARAM, EMBED_EPISODE_GUID_PARAM,
   EMBED_TITLE_PARAM, EMBED_SUBTITLE_PARAM, EMBED_CTA_TITLE_PARAM,
   EMBED_AUDIO_URL_PARAM, EMBED_IMAGE_URL_PARAM,
-  EMBED_CTA_URL_PARAM, EMBED_SUBSCRIBE_URL_PARAM, EMBED_SUBSCRIBE_TARGET } from '../embed';
+  EMBED_CTA_URL_PARAM, EMBED_SUBSCRIBE_URL_PARAM, EMBED_SUBSCRIBE_TARGET,
+  EMBED_SHOW_PLAYLIST_PARAM } from '../embed';
 
 export class BuilderProperties {
 
@@ -16,7 +17,8 @@ export class BuilderProperties {
       params[EMBED_IMAGE_URL_PARAM],
       params[EMBED_CTA_URL_PARAM],
       params[EMBED_SUBSCRIBE_URL_PARAM],
-      params[EMBED_SUBSCRIBE_TARGET]
+      params[EMBED_SUBSCRIBE_TARGET],
+      params[EMBED_SHOW_PLAYLIST_PARAM]
     );
   }
 
@@ -35,7 +37,8 @@ export class BuilderProperties {
     public imageUrl?: string,
     public ctaUrl?: string,
     public subscribeUrl?: string,
-    public subscribeTarget?: string
+    public subscribeTarget?: string,
+    public playlistLength?: number
   ) {}
 
   get allParams () {
@@ -49,13 +52,13 @@ export class BuilderProperties {
       imageUrl: EMBED_IMAGE_URL_PARAM,
       ctaUrl: EMBED_CTA_URL_PARAM,
       subscribeUrl: EMBED_SUBSCRIBE_URL_PARAM,
-      subscribeTarget: EMBED_SUBSCRIBE_TARGET
+      subscribeTarget: EMBED_SUBSCRIBE_TARGET,
+      playlistLength: EMBED_SHOW_PLAYLIST_PARAM
     };
   }
 
   get paramString() {
     let str: string[] = [];
-
     for (let param in this.allParams) {
       if (this[param]) {
         str.push(`${this.allParams[param]}=${this.encode(this[param])}`);

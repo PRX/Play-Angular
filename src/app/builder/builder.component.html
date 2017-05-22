@@ -45,14 +45,28 @@
     </section>
 
     <section class="builder-step" *ngIf="feedUrl && !feedError" id="step-2">
-      <fieldset>
-        <label>Always Play Most Recent Episode</label>
-        <input type="checkbox" [checked]="playLatest" (change)="togglePlayLatest()">Check this if the player should automatically update to always play the most recent episode from your feed.
-      </fieldset>
       <fieldset *ngIf="!playLatest">
-        <label>Or: Select Episode</label>
+        <label>Select Episode</label>
         <play-episode-picker  (select)="onEpisodeSelect($event)" (invalidFeed)="onInvalidFeedNavigate($event)"
         [feedUrl]="feedUrl" [selectedGUID]="episodeGuid"></play-episode-picker>
+      </fieldset>
+
+      <fieldset>
+        <label>Or: Always Play Most Recent Episode</label>
+        <input type="checkbox" [checked]="playLatest" (change)="togglePlayLatest()">Check this if the player should automatically update to always play the most recent episode from your feed.
+      </fieldset>
+
+      <fieldset>
+        <label for="playPlaylist">Make a Playlist Player</label>
+        <input id="playPlaylist" type="checkbox" [checked]="playPlaylist" (change)="togglePlayPlaylist()">Check this to create a playlist from your RSS feed.
+        <label for="playlistLength" *ngIf="playPlaylist">Playlist Length</label>
+        <select id="playlistLength" *ngIf="playPlaylist" [(ngModel)]="props.playlistLength">
+          <option></option>
+          <option value="5">5 episodes in playlist</option>
+          <option value="10">10 episodes in playlist</option>
+          <option value="15">15 episodes in playlist</option>
+          <option value="20">20 episodes in playlist</option>
+        </select>
       </fieldset>
       <hr>
     </section>
