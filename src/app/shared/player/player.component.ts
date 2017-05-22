@@ -52,7 +52,11 @@ export class PlayerComponent implements OnInit, OnChanges {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
-    this.episodeIndex = 0;
+    if (this.episodes && this.audioUrl === this.episodes[0].audioUrl) {
+      this.episodeIndex = 0;
+    } else {
+      this.episodeIndex = -1;
+    }
     this.player = new DovetailAudio(this.audioUrl);
     this.player.addEventListener('segmentstart', e => this.currentSegmentType = e[SEGMENT_TYPE]);
     this.player.addEventListener('ended', e => {
