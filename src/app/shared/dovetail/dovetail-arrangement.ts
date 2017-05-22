@@ -4,6 +4,7 @@ export interface DovetailArrangementEntry {
   duration?: number;
   audioUrl?: string;
   impressionUrl: string;
+  unplayable: boolean;
 }
 
 export interface DovetailArrangement {

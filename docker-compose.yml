@@ -1,4 +1,4 @@
-app:
+play:
   build: .
   volumes:
     - .:/app

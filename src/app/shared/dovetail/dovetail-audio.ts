@@ -73,6 +73,8 @@ export class DovetailAudio extends ExtendableAudio {
     this.$$sendEvent(PLAY);
     if (this._dovetailLoading) {
       this.resumeOnLoad = true;
+    } else if (this.arrangement.entries[this.index].unplayable) {
+      this.skipToFile(this.index + 1, true);
     } else {
       this._audio.play();
     }
@@ -162,7 +164,8 @@ export class DovetailAudio extends ExtendableAudio {
       duration: 0,
       id: 'fallback',
       type: 'fallback',
-      impressionUrl: null
+      impressionUrl: null,
+      unplayable: false
     }];
   }
 
@@ -232,12 +235,22 @@ export class DovetailAudio extends ExtendableAudio {
   private listenerOnError(event: Event) {
     event.stopImmediatePropagation();
     let el = <HTMLMediaElement> event.target;
-    if (this._dovetailOriginalUrl && el.error.code === el.error.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+    let unsupported = el.error.code === el.error.MEDIA_ERR_SRC_NOT_SUPPORTED;
+
+    if (this._dovetailOriginalUrl && unsupported) {
       let url = this._dovetailOriginalUrl;
       this._dovetailOriginalUrl = null;
       this._audio.src = '';
       this.index = -1;
       this.getDovetailDebug(url);
+    } else if (this.index > -1 && unsupported) {
+      this.arrangement.entries[this.index].duration = 0;
+      this.arrangement.entries[this.index].unplayable = true;
+      this.arrangement.duration = undefined;
+      this.$$sendEvent(DURATION_CHANGE);
+      if (this.index > 0) {
+        this.listenerOnEnded(event); // skip to next segment
+      }
     } else {
       this.$$sendEvent(ERROR, event);
     }
@@ -291,6 +304,12 @@ export class DovetailAudio extends ExtendableAudio {
       this.index = index;
       let arrangement = this.arrangement.entries[index];
       this.$$debug(`Goto: ${arrangement.id}`);
+
+      // skip unplayable / 0-length audio
+      if (arrangement.unplayable) {
+        return this.skipToFile(index + 1, resume);
+      }
+
       this._audio.src = arrangement.audioUrl;
       this._audio.playbackRate = this.playbackRate;
       if (resume) { this._audio.play(); }
