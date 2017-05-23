@@ -11,10 +11,12 @@ header, div, h2, em, small, ol, li, img {
 }
 
 .playlist-container {
-  background: white;
-  width: 100%;
-  position: absolute;
   top: 185px;
+  position: fixed;
+  height: calc(100% - 185px);
+  width: 100%;
+  background: white;
+  overflow: scroll;
   display: flex;
   flex-direction: column;
 }
@@ -41,6 +43,9 @@ header, div, h2, em, small, ol, li, img {
   height: 60px;
   padding: 10px;
   border-bottom: 1px solid lightgrey;
+}
+.playlist-entry:last-child {
+  border: none;
 }
 .entry-img {
   width: 40px;

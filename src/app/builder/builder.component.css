@@ -82,8 +82,10 @@ label {
 
 #step-1 label,
 #step-2 label,
+#step-4a label,
 #step-3 h4,
 #step-4 h4,
+#step-4a h4,
 #step-4b h4 {
   color: #343434;
   font-size: 18px;
@@ -96,8 +98,13 @@ label {
 
 #step-3 h4,
 #step-4 h4,
+#step-4a h4,
 #step-4b h4 {
   margin-bottom: 12px;
+}
+
+#step-4a input {
+  vertical-align: middle;
 }
 
 .builder-step {
@@ -161,6 +168,7 @@ label {
   font-family: 'Open Sans', sans-serif;
   width: 500px;
   height: 40px;
+  display: block;
 }
 
 .builder-step fieldset p {
