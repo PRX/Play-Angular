@@ -45,28 +45,14 @@
     </section>
 
     <section class="builder-step" *ngIf="feedUrl && !feedError" id="step-2">
-      <fieldset *ngIf="!playLatest">
-        <label>Select Episode</label>
-        <play-episode-picker  (select)="onEpisodeSelect($event)" (invalidFeed)="onInvalidFeedNavigate($event)"
-        [feedUrl]="feedUrl" [selectedGUID]="episodeGuid"></play-episode-picker>
-      </fieldset>
-
       <fieldset>
-        <label>Or: Always Play Most Recent Episode</label>
+        <label>Always Play Most Recent Episode</label>
         <input type="checkbox" [checked]="playLatest" (change)="togglePlayLatest()">Check this if the player should automatically update to always play the most recent episode from your feed.
       </fieldset>
-
-      <fieldset>
-        <label for="playPlaylist">Make a Playlist Player</label>
-        <input id="playPlaylist" type="checkbox" [checked]="playPlaylist" (change)="togglePlayPlaylist()">Check this to create a playlist from your RSS feed.
-        <label for="playlistLength" *ngIf="playPlaylist">Playlist Length</label>
-        <select id="playlistLength" *ngIf="playPlaylist" [(ngModel)]="props.playlistLength">
-          <option></option>
-          <option value="5">5 episodes in playlist</option>
-          <option value="10">10 episodes in playlist</option>
-          <option value="15">15 episodes in playlist</option>
-          <option value="20">20 episodes in playlist</option>
-        </select>
+      <fieldset *ngIf="!playLatest">
+        <label>Or: Select Episode</label>
+        <play-episode-picker  (select)="onEpisodeSelect($event)" (invalidFeed)="onInvalidFeedNavigate($event)"
+        [feedUrl]="feedUrl" [selectedGUID]="episodeGuid"></play-episode-picker>
       </fieldset>
       <hr>
     </section>
@@ -135,10 +121,10 @@
     <section class="builder-step" id="step-4" *ngIf="props">
       <h4>Copy and Use Your Embed Code</h4>
 
-      <p>Copy the code for one of the following players, and place it somewhere on your webpage.</p>
+      <p>Copy the code for one of the following single episode players, and place it somewhere on your webpage.</p>
 
       <fieldset>
-        <label for="embed-code-horizontal">Horizontal Player</label>
+        <label for="embed-code-horizontal">Horizontal Episode Player</label>
         <input type="text" readonly [ngModel]="props.horizontalIframeHtml"
           id="embed-code-horizontal" name="embedcodehorizontal" #codeInputHorizontal>
         <button class="copy-code"
@@ -146,12 +132,12 @@
           (click)="copyCode(codeInputHorizontal, copyBtnHorizontal)"
           #copyBtnHorizontal>Copy</button>
         <p>
-          <small>This player is 200 pixels tall and fills any available width on the page it's included on.</small>
+          <small>This player is 200 pixels tall and stretches to fit the width on the page.</small>
         </p>
       </fieldset>
 
       <fieldset>
-        <label for="embed-code-square">Square Player</label>
+        <label for="embed-code-square">Square Episode Player</label>
         <input type="text" readonly [ngModel]="props.squareIframeHtml"
           id="embed-code-square" name="embedcodesquare" #codeInputSquare>
         <button class="copy-code"
@@ -159,9 +145,55 @@
           (click)="copyCode(codeInputSquare, copyBtnSquare)"
           #copyBtnSquare>Copy</button>
         <p>
-          <small>A 500 by 500 pixel square player that displays the artwork in large, prominent format.</small>
+          <small>This player is 500 by 500 pixels and displays the artwork in large, prominent format.</small>
         </p>
       </fieldset>
+    </section>
+
+    <section class="builder-step" id="step-4a" *ngIf="props">
+        <h4>
+          <input type="checkbox" [checked]="playPlaylist" (change)="togglePlayPlaylist()">
+          Or: Make It A Playlist
+        </h4>
+        <section *ngIf="playPlaylist">
+          <p>This will create a playlist from your RSS feed, starting with the most recent episode. The list of upcoming episodes will appear underneath the regular player.</p>
+          <fieldset>
+            <select *ngIf="playPlaylist" [(ngModel)]="props.playlistLength">
+              <option value="5">5 episodes in playlist</option>
+              <option value="10">10 episodes in playlist</option>
+              <option value="15">15 episodes in playlist</option>
+              <option value="20">20 episodes in playlist</option>
+            </select>
+          </fieldset>
+
+          <fieldset>
+            <label for="embed-code-horizontal-playlist">Horizontal Playlist Player</label>
+            <input type="text" readonly [ngModel]="props.horizontalPlaylistIframeHtml"
+              id="embed-code-horizontal-playlist" #codeInputHorizontalPlaylist>
+            <button class="copy-code"
+              (mouseover)="resetCopyButton(copyBtnHorizPlaylist)"
+              (click)="copyCode(codeInputHorizontalPlaylist, copyBtnHorizPlaylist)"
+              #copyBtnHorizPlaylist>Copy</button>
+            <p>
+              <small>This player is 500 pixels tall and stretches to fit the width on the page.</small>
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <label for="embed-code-vertical-playlist">Vertical Playlist Player</label>
+            <input type="text" readonly [ngModel]="props.verticalPlaylistIframeHtml"
+              id="embed-code-vertical-playlist" #codeInputVerticalPlaylist>
+            <button class="copy-code"
+              (mouseover)="resetCopyButton(copyBtnHorizPlaylist)"
+              (click)="copyCode(codeInputVerticalPlaylist, copyBtnVertPlaylist)"
+              #copyBtnVertPlaylist>Copy</button>
+            <p>
+              <small>This player is 500 pixels wide and 800 pixels tall.</small>
+            </p>
+          </fieldset>
+        </section>
+
+      <hr>
     </section>
 
     <section class="builder-step" id="step-4b" *ngIf="props">

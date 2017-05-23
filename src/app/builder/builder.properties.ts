@@ -84,6 +84,14 @@ export class BuilderProperties {
     return this.iframeHtml('100%', '200');
   }
 
+  get horizontalPlaylistIframeHtml() {
+    return this.iframeHtml('100%', '500');
+  }
+
+  get verticalPlaylistIframeHtml() {
+    return this.iframeHtml('500', '800');
+  }
+
   private encode(str: string) {
     return encodeURIComponent(str)
       .replace(/[!'()*]/g, (c) => (`%${c.charCodeAt(0).toString(16)}`));
