@@ -15,13 +15,23 @@
     id="preview-horizontal"
     width="95%"
     [src]="previewIframeSrc"></iframe> -->
-  <div id="preview-horizontal-wrap">
+  <div *ngIf="!playPlaylist" id="preview-horizontal-wrap">
     <iframe
       #previewSquare
       *ngIf="previewIframeSrc"
       frameborder="0"
       height="185"
       id="preview-horizontal"
+      width="600"
+      [src]="previewIframeSrc"></iframe>
+  </div>
+  <div *ngIf="playPlaylist" id="preview-playlist-wrap">
+    <iframe
+      #previewSquare
+      *ngIf="previewIframeSrc"
+      frameborder="0"
+      height="650"
+      id="preview-playlist"
       width="600"
       [src]="previewIframeSrc"></iframe>
   </div>
