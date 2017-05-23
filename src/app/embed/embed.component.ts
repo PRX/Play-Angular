@@ -18,8 +18,8 @@ const PYM_CHILD_ID_PARAM = 'childId';
     <play-share-modal *ngIf="showShareModal" (close)="hideModal()">
     </play-share-modal>
     <play-player [feedArtworkUrl]="feedArtworkUrl" [audioUrl]="audioUrl" [title]="title" [subtitle]="subtitle"
-      [subscribeUrl]="subscribeUrl" [subscribeTarget]="subscribeTarget"
-      [artworkUrl]="artworkUrl" [episodes]="episodes" (share)="showModal()" [class.hideOverflow]="!showPlaylist">
+      [subscribeUrl]="subscribeUrl" [subscribeTarget]="subscribeTarget" [artworkUrl]="artworkUrl" (share)="showModal()"
+      [showPlaylist]="showPlaylist" [episodes]="episodes" [class.hideOverflow]="!showPlaylist">
     </play-player>
   `
 })
@@ -37,9 +37,9 @@ export class EmbedComponent implements OnInit {
   artworkUrl: string;
   feedArtworkUrl: string;
   pymId?: string;
-  showPlaylist: boolean;
 
   // playlist
+  showPlaylist: boolean;
   episodes: AdapterProperties[];
 
   constructor(private route: ActivatedRoute, private adapter: MergeAdapter) {}

@@ -29,6 +29,9 @@
           <button (click)="seekBy(30)" id="forward-control-button">
             <img src="/assets/images/forward-30.svg" alt="">
           </button>
+          <button *ngIf="showPlaylist" (click)="skipTrack()" id="skip-button">
+            <img src="/assets/images/skip.svg" alt="">
+          </button>
 
           <!-- <button (click)="cyclePlaybackRate()" id="playback-rate-control-button">
           <div *ngIf="player.playbackRate === 1">1<span>✕</span></div>

@@ -25,6 +25,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   @Input() artworkUrl: string;
   @Input() feedArtworkUrl: string;
   @Input() episodes: any[];
+  @Input() showPlaylist: boolean;
   @Output() share = new EventEmitter<boolean>();
 
   artworkSafe: SafeStyle;
@@ -32,7 +33,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   artworkSafeLoaded: SafeStyle;
 
   // for playlist feature
-  episodeIndex: number;
+  episodeIndex = 0;
 
   private player: DovetailAudio;
   private logger: Logger;
@@ -52,11 +53,6 @@ export class PlayerComponent implements OnInit, OnChanges {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
-    if (this.episodes && this.audioUrl === this.episodes[0].audioUrl) {
-      this.episodeIndex = 0;
-    } else {
-      this.episodeIndex = -1;
-    }
     this.player = new DovetailAudio(this.audioUrl);
     this.player.addEventListener('segmentstart', e => this.currentSegmentType = e[SEGMENT_TYPE]);
     this.player.addEventListener('ended', e => {
@@ -105,6 +101,10 @@ export class PlayerComponent implements OnInit, OnChanges {
     if (this.player && changes.audioUrl) {
       this.player.src = this.audioUrl;
     }
+    if (changes.episodes) {
+      const playingFirstEp = this.showPlaylist && this.episodes && this.audioUrl === this.episodes[0].audioUrl;
+      this.episodeIndex = playingFirstEp ?  0 : -1;
+    }
   }
 
   showShareModal() {
@@ -125,6 +125,10 @@ export class PlayerComponent implements OnInit, OnChanges {
       this.player.play();
       this.isHeld = false;
     }
+  }
+
+  skipTrack() {
+    this.navigatePlaylist(this.episodeIndex + 1);
   }
 
   navigatePlaylist(index: number) {
