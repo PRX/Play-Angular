@@ -23,11 +23,13 @@ describe('FeedAdapter', () => {
           <guid isPermaLink="false">guid-1</guid>
           <title>Title #1</title>
           <itunes:image href="http://item1/image.png"/>
+          <itunes:duration>1:00</itunes:duration>
           <enclosure url="http://item1/enclosure.mp3"/>
           <feedburner:origEnclosureLink>http://item1/original.mp3</feedburner:origEnclosureLink>
         </item>
         <item>
           <guid isPermaLink="false">guid-2</guid>
+          <itunes:duration>38:00:12</itunes:duration>
           <title>Title #2</title>
           <enclosure url="http://item2/enclosure.mp3"/>
         </item>

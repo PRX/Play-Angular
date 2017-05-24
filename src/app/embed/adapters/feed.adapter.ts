@@ -119,7 +119,7 @@ export class FeedAdapter implements DataAdapter {
                   || this.getTagAttribute(item, 'enclosure', 'url');
     props.artworkUrl = this.getTagAttributeNS(item, 'itunes', 'image', 'href');
     let duration = this.getTagTextNS(item, 'itunes', 'duration');
-    props.duration = this.durationInSec(duration);
+    props.duration = duration ? this.durationInSec(duration) : 0;
     return props;
   }
 
