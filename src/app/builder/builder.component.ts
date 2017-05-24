@@ -65,7 +65,11 @@ export class BuilderComponent implements OnInit {
 
   togglePlayPlaylist() {
     this.playPlaylist = !this.playPlaylist;
-    this.props.playlistLength = this.props.playlistLength || 10;
+    if (this.playPlaylist) {
+      this.props.playlistLength = this.props.playlistLength || 10;
+    } else {
+      this.props.playlistLength = 0;
+    }
     this.previewIframeSrc = this._previewIframeSrc;
   }
 

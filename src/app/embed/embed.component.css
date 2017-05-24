@@ -6,7 +6,5 @@ play-player {
   flex-direction: column;
   box-sizing: border-box;
   border-radius: 5px;
-}
-.hideOverflow {
   overflow: hidden;
 }

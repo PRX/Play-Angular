@@ -111,6 +111,10 @@ label {
 #step-4a input {
   vertical-align: middle;
 }
+#step-4a h4 {
+  padding: 0;
+}
+
 
 .builder-step {
 
