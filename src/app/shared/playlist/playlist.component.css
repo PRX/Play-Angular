@@ -67,6 +67,9 @@ header, div, h2, em, small, ol, li, img {
   top: -10px;
   left: -10px;
 }
+.entry-index {
+  flex-basis: 15px;
+}
 .entry-title {
   flex-basis: 70%;
 }

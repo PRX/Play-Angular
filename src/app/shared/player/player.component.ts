@@ -150,8 +150,6 @@ export class PlayerComponent implements OnInit, OnChanges {
         this.player.play();
         this.player.removeEventListener();
       });
-    } else {
-      console.log('fin');
     }
   }
 

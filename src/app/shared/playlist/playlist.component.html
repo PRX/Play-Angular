@@ -5,7 +5,7 @@
   </header>
   <ol>
     <li class="playlist-entry" (click)="playlistItemClicked.emit(episode.index)" *ngFor="let episode of episodes">
-      <small>
+      <small class="entry-index">
         {{ episode.index + 1 }}
       </small>
       <div class="entry-img">
