@@ -19,7 +19,7 @@ const PYM_CHILD_ID_PARAM = 'childId';
     </play-share-modal>
     <play-player [feedArtworkUrl]="feedArtworkUrl" [audioUrl]="audioUrl" [title]="title" [subtitle]="subtitle"
       [subscribeUrl]="subscribeUrl" [subscribeTarget]="subscribeTarget" [artworkUrl]="artworkUrl" (share)="showModal()"
-      [showPlaylist]="showPlaylist" [episodes]="episodes" [class.hideOverflow]="!showPlaylist">
+      [showPlaylist]="showPlaylist" [episodes]="episodes">
     </play-player>
   `
 })
