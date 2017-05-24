@@ -146,8 +146,10 @@ export class PlayerComponent implements OnInit, OnChanges {
       this.title = newEpisode.title;
       this.artworkUrl = newEpisode.artworkUrl;
       this.audioUrl = this.player.src = newEpisode.audioUrl;
-      this.player.addEventListener('canplay', e => this.player.play());
-      this.player.removeEventListener();
+      this.player.addEventListener('canplay', e => {
+        this.player.play();
+        this.player.removeEventListener();
+      });
     } else {
       console.log('fin');
     }
