@@ -5,7 +5,7 @@ import { DebugElement }    from '@angular/core';
 import { PlaylistComponent } from './playlist.component';
 import { DurationPipe } from '../duration';
 
-describe('PlaylistComponent (inline template)', () => {
+describe('PlaylistComponent', () => {
 
   let comp:    PlaylistComponent;
   let fixture: ComponentFixture<PlaylistComponent>;
