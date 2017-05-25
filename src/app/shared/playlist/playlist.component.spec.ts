@@ -29,7 +29,6 @@ describe('PlaylistComponent (inline template)', () => {
   });
 
   it('shows up on the page', () => {
-    console.log('el', el);
     expect(el.textContent).toContain('2 episodes');
   });
 
