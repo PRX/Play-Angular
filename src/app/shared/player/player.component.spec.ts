@@ -20,7 +20,7 @@ describe('PlayerComponent', () => {
     });
     fixture = TestBed.createComponent(PlayerComponent);
     comp = fixture.componentInstance;
-    de = fixture.debugElement.query(By.css('content'));
+    de = fixture.debugElement.query(By.css('.player-container'));
     el = de.nativeElement;
     comp.title = 'Foo';
     comp.subtitle = 'Bar';
@@ -28,21 +28,23 @@ describe('PlayerComponent', () => {
   });
 
   it('shows info about the playing episode', () => {
-    console.log(el);
     expect(el.textContent).toContain('Foo');
     expect(el.textContent).toContain('Bar');
   });
 
-  it('can have a playlist with episodes', () => {
-    // need to solve -- the 'content' tag doesn't wrap around the playlist. 
-    el = de.nativeElement;
+  it('can show a playlist', () => {
     expect(de.queryAll(By.css('play-playlist')).length).toEqual(0);
     comp.showPlaylist = true;
     comp.episodes = [{ foo: 'bar' }];
     fixture.detectChanges();
-    console.log(el);
     expect(de.queryAll(By.css('play-playlist')).length).toEqual(1);
-    expect(el.textContent).toContain('0 Episodes');
   });
-  // it can emit event Share
+
+  it('should raise Share event when share button clicked', () => {
+    let sharing = false;
+    comp.share.subscribe((newSharing: boolean) => sharing = newSharing );
+    let shareButton = de.query(By.css('#share-button'));
+    shareButton.triggerEventHandler('click', null);
+    expect(sharing).toBe(true);
+  });
 });

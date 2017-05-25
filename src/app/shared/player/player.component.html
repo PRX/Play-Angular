@@ -1,76 +1,78 @@
-<div class="background-img" [style.background-image]="feedArtworkSafe"></div>
-<content>
-  <div class="metadata">
-    <div class="artwork">
-      <div class="artworkBackground" [class.loaded]="!!artworkSafeLoaded" [style.background-image]="artworkSafeLoaded"></div>
-      <img [src]="artworkUrl" (load)="artworkLoaded()" style="display:none"/>
-      <button (click)="togglePlayPause()" id="large-playback-control-button">
-        <img src="/assets/images/large-semi-transparent-play.svg" alt="" *ngIf="player.paused">
-        <img class="pauseButton" src="/assets/images/large-semi-transparent-pause.svg" alt="" *ngIf="!player.paused">
-      </button>
-    </div>
-    <section>
-      <header>
-        <div class="titles">
-          <h1 [title]="title">{{title}}</h1>
-          <h2 [title]="subtitle">{{subtitle}}</h2>
-        </div>
-        <div class="logo" id="upper-logo"><img *ngIf="logoSrc" [src]="logoSrc" alt=""></div>
-      </header>
-      <div class="controls">
-        <div class="buttons" (window:keydown)="handleHotkey($event)">
-          <button (click)="seekBy(-10)" id="rewind-control-button">
-            <img src="/assets/images/back-5.svg" alt="">
-          </button>
-          <button (click)="togglePlayPause()" id="playback-control-button">
-            <img src="/assets/images/play.svg" alt="" *ngIf="player.paused">
-            <img class="pauseButton" src="/assets/images/pause.svg" alt="" *ngIf="!player.paused">
-          </button>
-          <button (click)="seekBy(30)" id="forward-control-button">
-            <img src="/assets/images/forward-30.svg" alt="">
-          </button>
-          <button *ngIf="showPlaylist" (click)="skipTrack()" id="skip-button">
-            <img src="/assets/images/skip.svg" alt="">
-          </button>
-
-          <!-- <button (click)="cyclePlaybackRate()" id="playback-rate-control-button">
-          <div *ngIf="player.playbackRate === 1">1<span>✕</span></div>
-          <div *ngIf="player.playbackRate === 1.25">1.25<span>✕</span></div>
-          <div *ngIf="player.playbackRate === 1.5">1.5<span>✕</span></div>
-          <div *ngIf="player.playbackRate === 2">2<span>✕</span></div>
-        </button> -->
-        </div>
-
-        <nav>
-          <a [href]="subscribeUrl" *ngIf="subscribeUrl" [target]="subscribeTarget">
-            <img class="nav-button" src="/assets/images/plus-sign-subscribe.svg" alt="">
-          </a>
-          <a (click)="showShareModal()">
-            <img class="nav-button" src="/assets/images/share.svg" alt="">
-          </a>
-        </nav>
-        <div class="logo" id="lower-logo"><img *ngIf="logoSrc" [src]="logoSrc" alt=""></div>
+<div class="player-container">
+  <div class="background-img" [style.background-image]="feedArtworkSafe"></div>
+  <content>
+    <div class="metadata">
+      <div class="artwork">
+        <div class="artworkBackground" [class.loaded]="!!artworkSafeLoaded" [style.background-image]="artworkSafeLoaded"></div>
+        <img [src]="artworkUrl" (load)="artworkLoaded()" style="display:none"/>
+        <button (click)="togglePlayPause()" id="large-playback-control-button">
+          <img src="/assets/images/large-semi-transparent-play.svg" alt="" *ngIf="player.paused">
+          <img class="pauseButton" src="/assets/images/large-semi-transparent-pause.svg" alt="" *ngIf="!player.paused">
+        </button>
       </div>
-    </section>
-  </div>
+      <section>
+        <header>
+          <div class="titles">
+            <h1 [title]="title">{{title}}</h1>
+            <h2 [title]="subtitle">{{subtitle}}</h2>
+          </div>
+          <div class="logo" id="upper-logo"><img *ngIf="logoSrc" [src]="logoSrc" alt=""></div>
+        </header>
+        <div class="controls">
+          <div class="buttons" (window:keydown)="handleHotkey($event)">
+            <button (click)="seekBy(-10)" id="rewind-control-button">
+              <img src="/assets/images/back-5.svg" alt="">
+            </button>
+            <button (click)="togglePlayPause()" id="playback-control-button">
+              <img src="/assets/images/play.svg" alt="" *ngIf="player.paused">
+              <img class="pauseButton" src="/assets/images/pause.svg" alt="" *ngIf="!player.paused">
+            </button>
+            <button (click)="seekBy(30)" id="forward-control-button">
+              <img src="/assets/images/forward-30.svg" alt="">
+            </button>
+            <button *ngIf="showPlaylist" (click)="skipTrack()" id="skip-button">
+              <img src="/assets/images/skip.svg" alt="">
+            </button>
 
-  <div class="scrubber" (window:keydown)="handleHotkey($event)">
-    <span class="playback-progress" [class.loaded]="duration | async">{{currentTime | async | duration}}</span>
-    <play-progress
-      [value]="currentTime | async"
-      [maximum]="duration | async"
-      (seek)="onSeek($event)"
-      (scrubbing)="onScrub($event)">
-    </play-progress>
-    <span class="duration" [class.loaded]="duration | async ">{{duration | async | duration}}</span>
-  </div>
-</content>
-<play-playlist
-  *ngIf="showPlaylist && episodes && episodes.length"
-  [episodes]="episodes"
-  [subtitle]="subtitle"
-  [episodeIndex]="episodeIndex"
-  [channelArt]="feedArtworkUrl"
-  [playing]="!isPaused()"
-  (playlistItemClicked)="navigatePlaylist($event)">
-</play-playlist>
+            <!-- <button (click)="cyclePlaybackRate()" id="playback-rate-control-button">
+            <div *ngIf="player.playbackRate === 1">1<span>✕</span></div>
+            <div *ngIf="player.playbackRate === 1.25">1.25<span>✕</span></div>
+            <div *ngIf="player.playbackRate === 1.5">1.5<span>✕</span></div>
+            <div *ngIf="player.playbackRate === 2">2<span>✕</span></div>
+          </button> -->
+          </div>
+
+          <nav>
+            <a [href]="subscribeUrl" *ngIf="subscribeUrl" [target]="subscribeTarget">
+              <img class="nav-button" src="/assets/images/plus-sign-subscribe.svg" alt="">
+            </a>
+            <a (click)="showShareModal()" id="share-button">
+              <img class="nav-button" src="/assets/images/share.svg" alt="">
+            </a>
+          </nav>
+          <div class="logo" id="lower-logo"><img *ngIf="logoSrc" [src]="logoSrc" alt=""></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scrubber" (window:keydown)="handleHotkey($event)">
+      <span class="playback-progress" [class.loaded]="duration | async">{{currentTime | async | duration}}</span>
+      <play-progress
+        [value]="currentTime | async"
+        [maximum]="duration | async"
+        (seek)="onSeek($event)"
+        (scrubbing)="onScrub($event)">
+      </play-progress>
+      <span class="duration" [class.loaded]="duration | async ">{{duration | async | duration}}</span>
+    </div>
+  </content>
+  <play-playlist
+    *ngIf="showPlaylist && episodes && episodes.length"
+    [episodes]="episodes"
+    [subtitle]="subtitle"
+    [episodeIndex]="episodeIndex"
+    [channelArt]="feedArtworkUrl"
+    [playing]="!isPaused()"
+    (playlistItemClicked)="navigatePlaylist($event)">
+  </play-playlist>
+</div>
