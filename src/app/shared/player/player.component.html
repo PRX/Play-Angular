@@ -66,7 +66,7 @@
   </div>
 </content>
 <play-playlist
-  *ngIf="episodes && episodes.length"
+  *ngIf="showPlaylist && episodes && episodes.length"
   [episodes]="episodes"
   [subtitle]="subtitle"
   [episodeIndex]="episodeIndex"
