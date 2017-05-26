@@ -70,6 +70,10 @@ export class BuilderComponent implements OnInit {
     } else {
       this.props.playlistLength = 0;
     }
+    this.resetPreviewIframe();
+  }
+
+  resetPreviewIframe() {
     this.previewIframeSrc = this._previewIframeSrc;
   }
 
@@ -96,6 +100,7 @@ export class BuilderComponent implements OnInit {
 
   onEpisodeSelect(episode: Episode) {
     this.playLatest = false;
+    let playlistEps = this.props && this.props.playlistLength ? this.props.playlistLength : 0;
     this.props = new BuilderProperties(
       this.feedUrl,
       episode.guid,
@@ -106,7 +111,8 @@ export class BuilderComponent implements OnInit {
       '', // image
       '', // CTA url
       '', // subscriptionURL
-      '_blank'
+      '_blank', // subscribe target
+      playlistEps // number of eps in playlist
     );
     this.defaults = {
       title: episode.title,
@@ -115,6 +121,7 @@ export class BuilderComponent implements OnInit {
       imageUrl: episode.imageUrl,
       subscribeUrl: this.feedUrl
     };
+    this.resetPreviewIframe();
   }
 
   resetCopyButton(el: Element) {
