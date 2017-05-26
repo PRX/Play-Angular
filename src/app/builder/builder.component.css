@@ -87,10 +87,8 @@ label {
 
 #step-1 label,
 #step-2 label,
-#step-4a label,
 #step-3 h4,
 #step-4 h4,
-#step-4a h4,
 #step-4b h4 {
   color: #343434;
   font-size: 18px;
@@ -103,21 +101,12 @@ label {
 
 #step-3 h4,
 #step-4 h4,
-#step-4a h4,
 #step-4b h4 {
   margin-bottom: 12px;
 }
 
-#step-4a input {
+.builder-step input[type='checkbox'] {
   vertical-align: middle;
-}
-#step-4a h4 {
-  padding: 0;
-}
-
-
-.builder-step {
-
 }
 
 .builder-step input[type='text'],
