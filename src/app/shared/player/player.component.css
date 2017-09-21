@@ -7,7 +7,8 @@
   -webkit-filter: blur(25px);
   -moz-filter: blur(25px);
   -o-filter: blur(25px);
-  margin: -25px;
+  top: -25px;
+  left: -25px;
   /* to account for the white-edge blurring from the filter: blur */
   min-height: calc(100% + 50px);
   width: calc(100% + 50px);
@@ -88,18 +89,6 @@ content {
   }
   .metadata {
     flex: 0 0 130px;
-  }
-}
-
-@media (max-height: 160px) {
-  .artwork {
-    width: 90px;
-    height: 90px;
-    min-width: 90px;
-    min-height: 90px;
-  }
-  .metadata {
-    flex: 0 0 120px;
   }
 }
 
@@ -191,7 +180,8 @@ header {
 }
 
 h1,
-h2 {
+h2,
+h3 {
   margin: 0;
   border: 0;
   padding: 0;
@@ -202,6 +192,15 @@ h2 {
   color: #ffffff;
 }
 
+h3 {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+h1 a, h2 a, h3 a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
 h1 {
   height: 20px;
   font-size: 16px;
@@ -209,6 +208,11 @@ h1 {
 }
 
 h2 {
+  height: 18px;
+  font-size: 14px;
+}
+
+h3 {
   height: 18px;
   font-size: 14px;
 }
@@ -316,8 +320,6 @@ nav a:hover {
 .nav-button {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  border: 1.5px solid gray;
   background: inherit;
   margin-bottom: 2px; /* This is a bit of a hack to fix border clipping */
   transition: width 0.2s, height 0.2s;
@@ -434,5 +436,22 @@ play-progress {
   .overlayed #large-playback-control-button {
     opacity: 1;
     pointer-events: all;
+  }
+}
+
+@media (max-height: 160px) {
+  .artwork {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    min-height: 100px;
+  }
+  .metadata {
+    flex: 0 0 130px;
+  }
+
+  .scrubber {
+    position: relative;
+    top: -10px;
   }
 }

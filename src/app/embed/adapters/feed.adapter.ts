@@ -12,6 +12,12 @@ import { sha1 } from './sha1';
 const GUID_PREFIX = 's1!';
 const CDATA = '<![CDATA[';
 
+interface ReferenceableAdapterProperties extends AdapterProperties {
+  isReference?: boolean;
+  referenceFeedUrl?: string;
+  referenceFeedGuid?: string;
+}
+
 @Injectable()
 export class FeedAdapter implements DataAdapter {
 
@@ -35,11 +41,22 @@ export class FeedAdapter implements DataAdapter {
     }
   }
 
-  processFeed(feedUrl: string, episodeGuid?: string, numEpisodes?: number | string): Observable<AdapterProperties> {
-    return this.fetchFeed(feedUrl).map(body => {
+  processFeed(feedUrl: string, episodeGuid?: string, numEpisodes?: number | string, baseProperties?: AdapterProperties): Observable<AdapterProperties> {
+    return this.fetchFeed(feedUrl).flatMap(body => {
       let props = this.parseFeed(body, episodeGuid, numEpisodes);
       Object.keys(props).filter(k => props[k] === undefined).forEach(key => delete props[key]);
-      return props;
+      if (props.isReference) {
+        let { subscribeUrl: pointerFeedUrl, subtitle: pointerFeedName, feedArtworkUrl } = props,
+          base = { pointerFeedUrl, pointerFeedName, feedArtworkUrl };
+        return this.processFeed(props.referenceFeedUrl, props.referenceFeedGuid, numEpisodes, base);
+      }
+      props.artworkUrl = props.artworkUrl || props.feedArtworkUrl;
+      if (baseProperties) {
+        Object.keys(baseProperties).forEach(baseProp => {
+          props[baseProp] = baseProperties[baseProp];
+        });
+      }
+      return Observable.of(props);
     }).catch(err => {
       FeedAdapter.logError(err);
       return Observable.of({}); // TODO: really ignore errors?
@@ -59,7 +76,7 @@ export class FeedAdapter implements DataAdapter {
     });
   }
 
-  parseFeed(xml: string, episodeGuid?: string, numEpisodes?: number | string): AdapterProperties {
+  parseFeed(xml: string, episodeGuid?: string, numEpisodes?: number | string): ReferenceableAdapterProperties {
     let parser = new DOMParser();
     let doc = <XMLDocument> parser.parseFromString(xml, 'application/xml');
     let props = this.processDoc(doc);
@@ -117,13 +134,20 @@ export class FeedAdapter implements DataAdapter {
     return props;
   }
 
-  processEpisode(item: Element, props: AdapterProperties = {}): AdapterProperties {
+  processEpisode(item: Element, props: ReferenceableAdapterProperties = {}): ReferenceableAdapterProperties {
     props.title = this.getTagText(item, 'title');
     props.audioUrl = this.getTagTextNS(item, 'feedburner', 'origEnclosureLink')
                   || this.getTagAttribute(item, 'enclosure', 'url');
     props.artworkUrl = this.getTagAttributeNS(item, 'itunes', 'image', 'href');
     let duration = this.getTagTextNS(item, 'itunes', 'duration');
     props.duration = duration ? this.durationInSec(duration) : 0;
+    const referenceFeedUrl = this.getTagAttributeNS(item, 'rp', 'episode-reference', 'feed-url');
+    const referenceEpisodeGuid = this.getTagTextNS(item, 'rp', 'episode-reference');
+    if (referenceEpisodeGuid) {
+      props.isReference = true;
+      props.referenceFeedUrl = referenceFeedUrl;
+      props.referenceFeedGuid = referenceEpisodeGuid;
+    }
     return props;
   }
 

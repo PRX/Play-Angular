@@ -13,8 +13,9 @@
       <section>
         <header>
           <div class="titles">
-            <h1 [title]="title">{{title}}</h1>
-            <h2 [title]="subtitle">{{subtitle}}</h2>
+            <h1 [title]="title"><a *ngIf="episodeLink" [href]="episodeLink" target="_top">{{title}}</a><span *ngIf="!episodeLink">{{title}}</span></h1>
+            <h2 [title]="subtitle"><a *ngIf="programLink" [href]="programLink" target="_top">{{subtitle}}</a><span *ngIf="!programLink">{{subtitle}}</span></h2>
+            <h3 *ngIf="pointerFeedName">Shared via <a [href]="pointerFeedUrl" target="_top">{{pointerFeedName}}</a></h3>
           </div>
           <div class="logo" id="upper-logo"><img load-render *ngIf="logoSrc" [src]="logoSrc" alt=""></div>
         </header>
@@ -41,7 +42,6 @@
             <div *ngIf="player.playbackRate === 2">2<span>✕</span></div>
           </button> -->
           </div>
-
           <nav>
             <a *ngIf="audioUrl || initialLoading" load-render [href]="audioUrl" (click)="requestDownload($event)" [target]="subscribeTarget">
               <img class="nav-button" src="/assets/images/download.svg" alt="download">

@@ -30,8 +30,14 @@ export class PlayerComponent implements OnInit, OnChanges {
   @Input() subscribeTarget: string;
   @Input() artworkUrl: string;
   @Input() feedArtworkUrl: string;
+
   @Input() episodes: any[];
   @Input() showPlaylist: boolean;
+
+  @Input() episodeLink: string;
+  @Input() programLink: string;
+  @Input() pointerFeedUrl: string;
+  @Input() pointerFeedName: string;
   @Output() share = new EventEmitter<boolean>();
   @Output() play = new EventEmitter<Event>();
   @Output() pause = new EventEmitter<Event>();
