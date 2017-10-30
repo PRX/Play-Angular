@@ -16,4 +16,4 @@ phases:
       - "docker-compose -f docker-compose-ci.yml run play ci"
   post_build:
     commands:
-      - 'curl -sO "https://gist.githubusercontent.com/farski/c83d792c6027b01b32b87c24570099b7/raw/17786ffd8fcea359750df6c14d172116e97375eb/ci-post_build.sh" && sh ci-post_build.sh'
+      - 'curl -sO "https://gist.githubusercontent.com/farski/c83d792c6027b01b32b87c24570099b7/raw/02be5b9f7901c98cab56679ac38775bba4da7b1b/ci-post_build.sh" && sh ci-post_build.sh'
