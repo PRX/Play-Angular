@@ -1,4 +1,7 @@
 version: 0.2
+env:
+  variables:
+    PRX_ECR_REGION: "us-east-1"
 phases:
   build:
     commands:
