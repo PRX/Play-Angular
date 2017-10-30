@@ -3,6 +3,12 @@ env:
   variables:
     PRX_ECR_REGION: "us-east-1"
 phases:
+  install:
+    commands:
+      - 'echo "Installing docker-compose..."'
+      - 'COMPOSE="https://github.com/docker/compose/releases/download/1.11.2/docker-compose-$(uname -s)-$(uname -m)" && curl -sL $COMPOSE -o /usr/local/bin/docker-compose'
+      - "chmod +x /usr/local/bin/docker-compose"
   build:
     commands:
-      - "ls"
+      - "docker-compose -f docker-compose-ci.yml build"
+      - "docker-compose -f docker-compose-ci.yml run play ci"
