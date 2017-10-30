@@ -2,6 +2,7 @@ version: 0.2
 env:
   variables:
     PRX_ECR_REGION: "us-east-1"
+    PRX_ECR_REPOSITORY: "publish.prx.org"
 phases:
   install:
     commands:
