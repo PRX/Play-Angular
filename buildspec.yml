@@ -10,5 +10,6 @@ phases:
       - "chmod +x /usr/local/bin/docker-compose"
   build:
     commands:
+      - "ls"
       - "docker-compose -f docker-compose-ci.yml build"
       - "docker-compose -f docker-compose-ci.yml run play ci"
