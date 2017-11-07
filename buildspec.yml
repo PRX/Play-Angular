@@ -3,6 +3,7 @@ env:
   variables:
     PRX_ECR_REGION: "us-east-1"
     PRX_ECR_REPOSITORY: "testtesttest"
+    PRX_ECR_CONFIG_PARAMETERS: "TestTestTestEcrImageTag"
     PRX_CI_PUBLISH: "true"
 phases:
   install:
