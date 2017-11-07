@@ -18,4 +18,3 @@ phases:
   post_build:
     commands:
       - 'curl -sO "https://raw.githubusercontent.com/PRX/Infrastructure/master/ci/utility/post_build.sh" && chmod +x post_build.sh && bash ./post_build.sh'
-
