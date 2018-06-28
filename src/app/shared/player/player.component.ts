@@ -33,6 +33,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   @Input() feedArtworkUrl: string;
   @Input() episodes: any[];
   @Input() showPlaylist: boolean;
+  @Input() showVolume: boolean;
   @Output() share = new EventEmitter<boolean>();
   @Output() play = new EventEmitter<Event>();
   @Output() pause = new EventEmitter<Event>();
@@ -62,6 +63,8 @@ export class PlayerComponent implements OnInit, OnChanges {
 
   currentTime: Observable<number>;
   currentDuration: Observable<number>;
+
+  volume: number;
 
   logoSrc: string;
 
@@ -181,6 +184,10 @@ export class PlayerComponent implements OnInit, OnChanges {
 
   showShareModal() {
     this.share.emit(true);
+  }
+
+  onVolChange(volume: number) {
+    this.changeVolumeTo(volume);
   }
 
   onSeek(position: number) {
@@ -364,6 +371,10 @@ export class PlayerComponent implements OnInit, OnChanges {
   private seekTo(time: number) {
     this.isEnded = false;
     this.player.currentTime = this.boundedTime(time);
+  }
+
+  private changeVolumeTo(value: number) {
+    this.player.volume = value;
   }
 
   seekBy(seconds: number) {

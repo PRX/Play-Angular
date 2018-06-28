@@ -6,7 +6,7 @@ import { DraperAdapter } from './adapters/draper.adapter';
 import { FeedAdapter } from './adapters/feed.adapter';
 import { AdapterProperties } from './adapters/adapter.properties';
 import { PlayerComponent } from '../shared/player/player.component';
-import { EMBED_SHOW_PLAYLIST_PARAM } from './embed.constants';
+import { EMBED_SHOW_PLAYLIST_PARAM, EMBED_SHOW_VOLUME_PARAM } from './embed.constants';
 
 const PYM_MESSAGE_DELIMITER = 'xPYMx';
 const PYM_CHILD_ID_PARAM = 'childId';
@@ -19,7 +19,7 @@ const PYM_CHILD_ID_PARAM = 'childId';
     <play-share-modal *ngIf="showShareModal" (close)="hideModal()"></play-share-modal>
     <play-player [feedArtworkUrl]="feedArtworkUrl" [audioUrl]="audioUrl" [title]="title" [subtitle]="subtitle"
       [subscribeUrl]="subscribeUrl" [subscribeTarget]="subscribeTarget" [artworkUrl]="artworkUrl" (share)="showModal()"
-      [showPlaylist]="showPlaylist" [episodes]="episodes" (play)="onPlay($event)" (pause)="onPause($event)"
+      [showPlaylist]="showPlaylist" [episodes]="episodes" [showVolume]="showVolume" (play)="onPlay($event)" (pause)="onPause($event)"
       (ended)="onEnded($event)" (download)="onDownload($event)" (downloadUrl)="onDownloadUrl($event)" [duration]="duration">
       <ng-template let-dismiss="dismiss">
         <div class="app-overlay" (window:keydown)="handleKeypress($event)">
@@ -60,6 +60,7 @@ export class EmbedComponent implements OnInit {
   artworkUrl: string;
   feedArtworkUrl: string;
   pymId?: string;
+  showVolume: boolean;
 
   // playlist
   showPlaylist: boolean;
@@ -76,6 +77,7 @@ export class EmbedComponent implements OnInit {
     this.route.queryParams.forEach(params => {
       this.pymId = params[PYM_CHILD_ID_PARAM];
       this.showPlaylist = typeof params[EMBED_SHOW_PLAYLIST_PARAM] !== 'undefined';
+      this.showVolume = typeof params[EMBED_SHOW_VOLUME_PARAM] !== 'undefined';
       this.setEmbedHeight();
       this.adapter.getProperties(params).subscribe(props => {
         this.assignEpisodePropertiesToPlayer(props);

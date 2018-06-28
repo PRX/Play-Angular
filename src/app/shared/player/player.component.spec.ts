@@ -7,6 +7,7 @@ import { MediaSessionService } from './mediasession.service';
 import { ProgressComponent } from '../progress';
 import { PlaylistComponent } from '../playlist';
 import { DurationPipe } from '../duration';
+import { VolumeComponent } from '../volume';
 
 describe('PlayerComponent', () => {
 
@@ -17,7 +18,7 @@ describe('PlayerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlayerComponent, DurationPipe, ProgressComponent, PlaylistComponent ],
+      declarations: [ PlayerComponent, VolumeComponent, DurationPipe, ProgressComponent, PlaylistComponent ],
       providers: [ MediaSessionService ]
     });
     fixture = TestBed.createComponent(PlayerComponent);
@@ -40,6 +41,13 @@ describe('PlayerComponent', () => {
     comp.episodes = [{ foo: 'bar' }];
     fixture.detectChanges();
     expect(de.queryAll(By.css('play-playlist')).length).toEqual(1);
+  });
+
+  it('can show volume control', () => {
+    expect(de.queryAll(By.css('volume-control')).length).toEqual(0);
+    comp.showVolume = true;
+    fixture.detectChanges();
+    expect(de.queryAll(By.css('volume-control')).length).toEqual(1);
   });
 
   it('should raise Share event when share button clicked', () => {
