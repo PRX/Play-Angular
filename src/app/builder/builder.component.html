@@ -141,6 +141,12 @@
           </p>
         </fieldset>
 
+        <fieldset>
+          <label>
+          <input type="checkbox" [checked]="showVolume" (change)="toggleVolumeControl()">
+          Show Volume Control</label>
+        </fieldset>
+
         <!-- <fieldset>
           <label for="ctaUrl">CTA Title</label>
           <input type="text" [(ngModel)]="props.ctaUrl" id="ctaUrl">

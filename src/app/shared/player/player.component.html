@@ -61,15 +61,24 @@
       </section>
     </div>
 
-    <div class="scrubber">
-      <span class="playback-progress" [class.loaded]="currentDuration | async">{{currentTime | async | duration}}</span>
-      <play-progress
-        [value]="currentTime | async"
-        [maximum]="currentDuration | async"
-        (seek)="onSeek($event)"
-        (scrubbing)="onScrub($event)">
-      </play-progress>
-      <span class="duration" [class.loaded]="currentDuration | async ">{{currentDuration | async | duration}}</span>
+    <div class="playback-controls">
+      <div class="scrubber">
+        <span class="playback-progress" [class.loaded]="currentDuration | async">{{currentTime | async | duration}}</span>
+        <play-progress
+          [value]="currentTime | async"
+          [maximum]="currentDuration | async"
+          (seek)="onSeek($event)"
+          (scrubbing)="onScrub($event)">
+        </play-progress>
+        <span class="duration" [class.loaded]="currentDuration | async ">{{currentDuration | async | duration}}</span>
+      </div>
+      <div *ngIf="showVolume" class="volume-control">
+        <volume-control
+          [value]="player.volume"
+          (volChange)="onVolChange($event)"
+        >
+        </volume-control>
+      </div>
     </div>
 
     <div class="overlayContent"><ng-container *ngTemplateOutlet="overlayTemplate; context:overlayContext"></ng-container></div>

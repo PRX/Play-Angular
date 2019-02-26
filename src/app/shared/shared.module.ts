@@ -5,13 +5,15 @@ import { DurationPipe } from './duration';
 import { PlayerComponent, MediaSessionService } from './player';
 import { ProgressComponent } from './progress';
 import { PlaylistComponent } from './playlist';
+import { VolumeComponent } from './volume';
 
 @NgModule({
   declarations: [
     DurationPipe,
     PlayerComponent,
     ProgressComponent,
-    PlaylistComponent
+    PlaylistComponent,
+    VolumeComponent
   ],
   exports: [
     CommonModule,

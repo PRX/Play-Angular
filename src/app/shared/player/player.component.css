@@ -328,6 +328,35 @@ nav a:hover {
   height: 0;
 }
 
+.playback-controls {
+  display: inline-flex;
+}
+
+.volume-control {
+  display: none;
+  justify-content: space-around;
+  flex: auto 0 0;
+  margin-bottom: 14px;
+  margin-top: 0px;
+  opacity: 1;
+  position: relative;
+  top: 0;
+  transition: opacity 0.2s, top 0.2s;
+  width: 20%;
+}
+
+volume-control {
+  cursor: col-resize;
+  flex-basis: 80%;
+  height: 10px;
+  opacity: 0.3;
+  border-radius: 100px;
+  background-color: #ffffff;
+  display: block;
+  margin-top: 6px;
+  position: relative;
+}
+
 .scrubber {
   display: flex;
   justify-content: space-around;
@@ -338,13 +367,13 @@ nav a:hover {
   position: relative;
   top: 0;
   transition: opacity 0.2s, top 0.2s;
+  flex-grow: 1;
 }
 
-.overlayed .scrubber {
+.overlayed .scrubber, .overlayed .volume-control {
   opacity: 0;
   top: 20px;
 }
-
 
 play-progress {
   cursor: col-resize;
@@ -441,5 +470,8 @@ play-progress {
   .overlayed #large-playback-control-button {
     opacity: 1;
     pointer-events: all;
+  }
+  .volume-control {
+    display: flex;
   }
 }

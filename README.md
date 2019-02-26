@@ -32,6 +32,7 @@ To develop locally:
 
 ```sh
 cp env-example .env
+nvm use
 yarn
 
 # run the dev server

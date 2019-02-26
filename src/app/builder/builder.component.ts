@@ -23,6 +23,7 @@ export class BuilderComponent implements OnInit {
   editMode = false;
   playLatest = false;
   playPlaylist = false;
+  showVolume = false;
   feedError = false;
   sslError: string = null;
 
@@ -73,6 +74,16 @@ export class BuilderComponent implements OnInit {
       this.props.playlistLength = 0;
     }
     this.resetPreviewIframe();
+  }
+
+  toggleVolumeControl() {
+    this.showVolume = !this.showVolume;
+    if (this.showVolume) {
+      this.props.showVolume = 'true'
+    } else {
+      this.props.showVolume = null
+    }
+    this.resetPreviewIframe()
   }
 
   resetPreviewIframe() {
