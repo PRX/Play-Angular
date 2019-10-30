@@ -2,48 +2,46 @@
 
 Embeddable audio playback!
 
-# Install
+# Developing
 
-Clone the project, install dependencies, and start with these defaults in your `.env` file:
+TODO: hot-reloading not working yet via docker-compose, so you probably want
+to just develop locally for now.
+
+Generally, you'll want to look at the `/demo` page for various usages of this
+project.  Or copy the iframes from that page, and open them separately.
+
+## Docker
+
+TODO: port prx-ng-serve to this project, to make the dev-server work.
 
 ```sh
-# optional: npm install yarn --global
-yarn install
 cp env-example .env
-```
 
-## Developing
-
-Due to the complexity of installing node-sass in alpine-linux, it may be easier
-to just develop locally for the time being.  Just make sure you have a modern
-node version installed (6.x.x, ideally).
-
-```sh
-# setup pow proxy (see http://pow.cx/)
-echo 4300 > ~/.pow/play.prx
-
-# dev server
-npm start
-open http://play.prx.dev
-```
-
-## Docker Install
-
-Or if you really want to, you can develop via docker-compose.
-This guide assumes you already have npm, docker and dinghy installed.
-
-TODO: hot reloading not supported yet - this just builds the prod js.
-
-``` sh
 # build a docker image
 docker-compose build
 
-# install dev dependencies locally, so docker can mount those folders
-yarn install
-
-# run the docker image, will detect changes to local file system
+# run docker PROD server (no reloading)
 docker-compose up
+open "http://play.prx.docker/demo"
 
-# open up a browser to view
-open http://play.prx.docker
+# run the tests (ci command uses phantomjs)
+docker-compose run play ci
 ```
+
+To develop locally:
+
+```sh
+cp env-example .env
+yarn
+
+# run the dev server
+yarn start
+open "http://localhost:4300/demo"
+
+# run the tests
+yarn test
+```
+
+# License
+
+[MIT License](https://opensource.org/licenses/MIT)

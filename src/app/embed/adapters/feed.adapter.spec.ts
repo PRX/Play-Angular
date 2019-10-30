@@ -7,7 +7,7 @@ describe('FeedAdapter', () => {
   testService(FeedAdapter);
 
   beforeEach(() => {
-    spyOn(FeedAdapter, 'logError').and.stub();
+    FeedAdapter['logError'] = jest.fn()
   });
 
   const TEST_FEED = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -26,6 +26,12 @@ describe('FeedAdapter', () => {
           <itunes:duration>1:00</itunes:duration>
           <enclosure url="http://item1/enclosure.mp3"/>
           <feedburner:origEnclosureLink>http://item1/original.mp3</feedburner:origEnclosureLink>
+        </item>
+        <item>
+          <guid isPermaLink="false">guid-23</guid>
+          <itunes:duration>34:03:05</itunes:duration>
+          <title>Title #23</title>
+          <enclosure url="http://item23/enclosure.mp3"/>
         </item>
         <item>
           <guid isPermaLink="false">guid-2</guid>
@@ -120,6 +126,12 @@ describe('FeedAdapter', () => {
   it('defaults to the first item', injectHttp((feed: FeedAdapter, mocker) => {
     mocker(TEST_FEED);
     expect(getProperties(feed, 'whatev').title).toEqual('Title #1');
+  }));
+
+  it('looks for a fully matched guid', injectHttp((feed: FeedAdapter, mocker) => {
+    mocker(TEST_FEED);
+    let props = getProperties(feed, 'http://some.where/feed.xml', 'guid-2', 3);
+    expect(props.episodes[2].title).toEqual('Title #2');
   }));
 
 });

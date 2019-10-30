@@ -2,7 +2,7 @@ import { AdzerkRequest, AdzerkResponse, AdzerkFetcher } from '../adzerk';
 import { ExtendableAudio } from '../audio';
 import { DovetailFetcher, DovetailResponse } from './dovetail-fetcher';
 import { DovetailAudioEvent } from './dovetail-audio-event';
-import { DovetailArrangement, DovetailArrangementEntry } from './dovetail-arrangement';
+import { DovetailSegment } from './dovetail-segment';
 import { VanillaAudioError } from './dovetail-errors';
 
 type AllUnion = [
@@ -10,17 +10,12 @@ type AllUnion = [
   AdzerkResponse | PromiseLike<AdzerkResponse>
 ];
 
+interface DovetailSegmentEvent extends DovetailAudioEvent {
+  segment: DovetailSegment;
+}
+
 type AllResult = [DovetailResponse, AdzerkResponse];
 type PromiseResolver<x> = (value?: x | PromiseLike<x>) => void;
-
-function sumDuration(collector: number, entry: {duration?: number}) {
-  return collector + entry.duration || 0;
-}
-
-export interface SegmentEventData {
-  segmentType: string;
-  segment: DovetailArrangementEntry;
-}
 
 const DURATION_CHANGE = 'durationchange';
 const TIME_UPDATE = 'timeupdate';
@@ -43,7 +38,7 @@ const PROXIED_EVENTS = [
 ];
 
 export class DovetailAudio extends ExtendableAudio {
-  private arrangement: DovetailArrangement = {entries: []};
+  private arrangement: DovetailSegment[] = [];
   private index: number;
 
   private _dovetailOriginalUrl: string;
@@ -57,8 +52,6 @@ export class DovetailAudio extends ExtendableAudio {
   private resumeOnLoad: false|PromiseResolver<void> = false;
   private _playbackRate: number;
 
-  private _imgElem: HTMLImageElement;
-
   constructor(url: string) {
     super(undefined);
     this._audio.addEventListener(ERROR, this.listenerOnError.bind(this));
@@ -67,6 +60,7 @@ export class DovetailAudio extends ExtendableAudio {
     this.$$forwardEvent = this.$$forwardEvent.bind(this);
     this.$$forwardEvents(PROXIED_EVENTS);
     this.finishConstructor();
+    this.addEventListener(SEGMENT_START, this.$$logDownload.bind(this));
     this.addEventListener(SEGMENT_END, this.$$logImpression.bind(this));
     this._toSetUrl = url;
   }
@@ -82,7 +76,7 @@ export class DovetailAudio extends ExtendableAudio {
         return new Promise<void>(resolve => {
           this.resumeOnLoad = resolve;
         });
-      } else if (this.arrangement.entries[this.index] && this.arrangement.entries[this.index].unplayable) {
+      } else if (this.arrangement[this.index] && this.arrangement[this.index].unplayable) {
         return new Promise<void>(resolve => {
           this.skipToFile(this.index + 1, resolve);
         });
@@ -121,15 +115,12 @@ export class DovetailAudio extends ExtendableAudio {
   }
 
   get duration() {
-    if (typeof this.arrangement.duration === 'undefined') {
-      this.arrangement.duration = this.arrangement.entries.reduce(sumDuration, 0);
-    }
-    return this.arrangement.duration;
+    return this.arrangement.map(s => s.duration).reduce((a, b) => a + b, 0);
   }
 
   get currentTime() {
-    return this._audio.currentTime +
-      this.arrangement.entries.slice(0, this.index).reduce(sumDuration, 0);
+    let segments = this.arrangement.slice(0, this.index).map(s => s.duration);
+    return segments.reduce((a, b) => a + b, 0) + this._audio.currentTime;
   }
 
   set currentTime(position: number) {
@@ -139,8 +130,8 @@ export class DovetailAudio extends ExtendableAudio {
       if (this.onseeking) { this.onseeking(event); }
       if (this.duration >= position) {
         let soFar = 0, paused = this.paused;
-        for (let i = 0; i < this.arrangement.entries.length; i++) {
-          let duration = this.arrangement.entries[i].duration;
+        for (let i = 0; i < this.arrangement.length; i++) {
+          let duration = this.arrangement[i].duration;
           if (soFar + duration > position) {
             if (this.index !== i) {
               this.skipToFile(i);
@@ -198,15 +189,8 @@ export class DovetailAudio extends ExtendableAudio {
     });
   }
 
-  private fallback(url: string): DovetailArrangementEntry[] {
-    return [{
-      audioUrl: url,
-      duration: 0,
-      id: 'fallback',
-      type: 'fallback',
-      impressionUrl: null,
-      unplayable: false
-    }];
+  private fallback(url: string): DovetailSegment[] {
+    return [DovetailSegment.forUrl(url)];
   }
 
   private getDovetailDebug(url: string) {
@@ -221,7 +205,7 @@ export class DovetailAudio extends ExtendableAudio {
         }
       }
     ).then(([dovetailResponse, adzerkResponse]: AllResult) =>  {
-      return this.calculateArrangement(dovetailResponse.arrangement, adzerkResponse);
+      return this.calculateSegments(dovetailResponse, adzerkResponse);
     }).catch(error => {
       if (error instanceof VanillaAudioError) {
         let directUrl = this.dovetailFetcher.transform(url);
@@ -251,24 +235,22 @@ export class DovetailAudio extends ExtendableAudio {
     return this.currentAdzerkPromise;
   }
 
-  private calculateArrangement(
-    arrangementTemplate: DovetailArrangementEntry[], response: AdzerkResponse) {
-    let result: DovetailArrangementEntry[] = [];
-    for (let entry of arrangementTemplate) {
-      if (response.decisions[entry.id]) {
-        result.push(entry);
-        entry.audioUrl = response.decisions[entry.id].contents[0].data.imageUrl;
-        entry.duration = 10;
-        entry.impressionUrl = response.decisions[entry.id].impressionUrl;
+  private calculateSegments(dovetail: DovetailResponse, adzerk: AdzerkResponse) {
+    let result: DovetailSegment[] = [], isFirst = true;
+    for (let entry of dovetail.arrangement) {
+      if (adzerk.decisions[entry.id]) {
+        result.push(new DovetailSegment(entry, adzerk.decisions[entry.id], dovetail.tracker, isFirst));
+        isFirst = false;
       } else if (entry.type === 'original') {
-        result.push(entry);
+        result.push(new DovetailSegment(entry, null, dovetail.tracker, isFirst));
+        isFirst = false;
       }
     }
     return result;
   }
 
-  private setSegments(segments: DovetailArrangementEntry[]) {
-    this.arrangement = {entries: segments};
+  private setSegments(segments: DovetailSegment[]) {
+    this.arrangement = segments;
     this.skipToFile(0, this.resumeOnLoad);
   }
 
@@ -284,9 +266,7 @@ export class DovetailAudio extends ExtendableAudio {
       this.index = -1;
       this.getDovetailDebug(url);
     } else if (this.index > -1 && unsupported) {
-      this.arrangement.entries[this.index].duration = 0;
-      this.arrangement.entries[this.index].unplayable = true;
-      this.arrangement.duration = undefined;
+      this.arrangement[this.index].unplayable = true;
       this.$$sendEvent(DURATION_CHANGE);
       if (this.index > 0) {
         this.listenerOnEnded(event); // skip to next segment
@@ -298,16 +278,15 @@ export class DovetailAudio extends ExtendableAudio {
 
   private listenerOnDurationChange(event: Event) {
     event.stopImmediatePropagation();
-    if (this._audio.src === this.arrangement.entries[this.index].audioUrl) {
-      this.arrangement.entries[this.index].duration = this._audio.duration;
-      this.arrangement.duration = undefined;
+    if (this._audio.src === this.arrangement[this.index].audioUrl) {
+      this.arrangement[this.index].duration = this._audio.duration;
       this.$$sendEvent(DURATION_CHANGE);
     }
   }
 
   private listenerOnEnded(event: Event) {
     event.stopImmediatePropagation();
-    if (this._audio.src === this.arrangement.entries[this.index].audioUrl) {
+    if (this._audio.src === this.arrangement[this.index].audioUrl) {
       if (!this.skipToFile(this.index + 1, _ => {})) {
         this.$$sendEvent(ENDED);
       }
@@ -333,31 +312,24 @@ export class DovetailAudio extends ExtendableAudio {
   }
 
   private skipToFile(index: number, resume: false|PromiseResolver<void> = false): boolean {
-    if (this.index !== index && this.arrangement.entries.length > index) {
+    if (this.index !== index && this.arrangement.length > index) {
       if (this.index !== -1) {
-        const eventData: SegmentEventData = {
-          segment: this.arrangement.entries[this.index],
-          segmentType: this.arrangement.entries[this.index].type
-        };
-        this.$$sendEvent(SEGMENT_END, eventData);
+        this.$$sendEvent(SEGMENT_END, {segment: this.arrangement[this.index]});
       }
       this.index = index;
-      let arrangement = this.arrangement.entries[index];
-      this.$$debug(`Goto: ${arrangement.id}`);
+      let nextSegment = this.arrangement[index];
+      this.$$debug(`Goto: ${nextSegment.id}`);
 
       // skip unplayable / 0-length audio
-      if (arrangement.unplayable) {
+      if (nextSegment.unplayable) {
         return this.skipToFile(index + 1, resume);
       }
 
-      this._audio.src = arrangement.audioUrl;
+      this._audio.src = nextSegment.audioUrl;
       this._audio.playbackRate = this.playbackRate;
       if (resume) { resume(this.playItSafe()); }
 
-      this.$$sendEvent(SEGMENT_START, {
-        segment: arrangement,
-        segmentType: arrangement.type
-      });
+      this.$$sendEvent(SEGMENT_START, {segment: nextSegment});
 
       return true;
     } else {
@@ -365,20 +337,15 @@ export class DovetailAudio extends ExtendableAudio {
     }
   }
 
-  private $$logImpression(event: SegmentEventData) {
-    const type: string = event.segmentType;
-    const segment: DovetailArrangementEntry = event.segment;
+  private $$logDownload(event: DovetailSegmentEvent) {
+    if (event.segment && event.segment.trackBefore()) {
+      this.$$debug(`Download: ${event.segment.id}`);
+    }
+  }
 
-    if (type === 'ad' || type === 'houseAd') {
-      if (typeof this._imgElem === 'undefined') {
-          this._imgElem = document.createElement('img');
-          this._imgElem.width = 1;
-          this._imgElem.height = 1;
-          this._imgElem.style.position = 'absolute';
-          document.body.appendChild(this._imgElem);
-      }
-      this.$$debug(`Impress: ${segment.id}`);
-      this._imgElem.src = segment.impressionUrl;
+  private $$logImpression(event: DovetailSegmentEvent) {
+    if (event.segment && event.segment.trackAfter()) {
+      this.$$debug(`Impress: ${event.segment.id}`);
     }
   }
 

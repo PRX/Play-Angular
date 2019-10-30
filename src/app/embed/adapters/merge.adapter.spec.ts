@@ -33,7 +33,7 @@ describe('MergeAdapter', () => {
   ]);
 
   it('waits the top adapter before returning', injectHttp((merge: MergeAdapter) => {
-    spyOn(merge, 'hasMinimumParams').and.returnValue(true);
+    merge['hasMinimumParams'] = jest.fn().mockImplementation(() => true);
     let props: AdapterProperties;
     merge.getProperties({}).subscribe(p => props = p);
     expect(props).toBeUndefined();
@@ -44,7 +44,7 @@ describe('MergeAdapter', () => {
   }));
 
   it('overrides adapters by priority', injectHttp((merge: MergeAdapter) => {
-    spyOn(merge, 'hasMinimumParams').and.returnValue(true);
+    merge['hasMinimumParams'] = jest.fn().mockImplementation(() => true);
     let props: AdapterProperties;
     merge.getProperties({}).subscribe(p => props = p);
     feed.next({title: 'feed-title'});
@@ -56,7 +56,7 @@ describe('MergeAdapter', () => {
   }));
 
   it('always uses the latest values', injectHttp((merge: MergeAdapter) => {
-    spyOn(merge, 'hasMinimumParams').and.returnValue(true);
+    merge['hasMinimumParams'] = jest.fn().mockImplementation(() => true);
     let props: AdapterProperties;
     merge.getProperties({}).subscribe(p => props = p);
     feed.next({title: 'feed-title-1'});

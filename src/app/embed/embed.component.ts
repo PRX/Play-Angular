@@ -50,7 +50,7 @@ const RequestAnimationFrame = window['requestAnimationFrame']
     <play-player [feedArtworkUrl]="feedArtworkUrl" [audioUrl]="audioUrl" [title]="title" [subtitle]="subtitle"
       [subscribeUrl]="subscribeUrl" [subscribeTarget]="subscribeTarget" [artworkUrl]="artworkUrl" (share)="showModal()"
       [showPlaylist]="showPlaylist" [episodes]="episodes" (play)="onPlay($event)" (pause)="onPause($event)"
-      (ended)="onEnded($event)" (download)="onDownload($event)" [duration]="duration">
+      (ended)="onEnded($event)" (download)="onDownload($event)" (downloadUrl)="onDownloadUrl($event)" [duration]="duration">
       <ng-template let-dismiss="dismiss">
         <div class="app-overlay" (window:keydown)="handleKeypress($event)">
           <p>Never miss an episode from <strong>{{this.subtitle}}</strong>
@@ -65,7 +65,7 @@ const RequestAnimationFrame = window['requestAnimationFrame']
             <li *ngIf="isAndroidDevice">or the <a href="appStoreLink()"
               [target]="subscribeTarget" (click)="noticeExit('iOSApp')">App Store</a></li>
           </ul>
-          <p class="aside" *ngIf="downloadRequested">You can also <a [href]="audioUrl"
+          <p class="aside" *ngIf="downloadRequested">You can also <a [href]="downloadAudioUrl"
             [target]="subscribeTarget">download the audio file</a> if you're on a computer.</p>
         </div>
       </ng-template>
@@ -78,6 +78,7 @@ export class EmbedComponent implements OnInit {
   showShareModal = false;
   hasInteracted = false;
   downloadRequested = false;
+  downloadAudioUrl: string;
 
   // player params
   audioUrl: string;
@@ -156,6 +157,10 @@ export class EmbedComponent implements OnInit {
     this.modalDisplayReason = DOWNLOAD;
     this.logEvent(CTA_MODAL, DISPLAY, this.modalDisplayReason);
     this.player.displayOverlay();
+  }
+
+  onDownloadUrl(url: string) {
+    this.downloadAudioUrl = url;
   }
 
   playStoreLink() {

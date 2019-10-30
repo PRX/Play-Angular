@@ -94,7 +94,7 @@ p {
   margin: 0;
   border: 0;
   padding: 0 8px;
-  background: #368AA2;
+  background: #0089bd;
   color: white;
   border-radius: 0;
   border-top-right-radius: 3px;
@@ -105,9 +105,9 @@ p {
   text-align: center;
 }
 .embed-code button:hover {
-  color: #368AA2;
+  color: #0089bd;
   background: white;
-  border-left: 1px solid #368AA2;
+  border-left: 1px solid #0089bd;
 }
 .embed-code button:active {
   background: #ddd;

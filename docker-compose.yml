@@ -1,7 +1,17 @@
 play:
   build: .
   volumes:
-    - .:/app
+    - ./bin:/app/bin
+    - ./e2e:/app/e2e
+    - ./lib:/app/lib
+    - ./src:/app/src
+    - ./.angular-cli.json:/app/.angular-cli.json
+    - ./jest.config.js:/app/jest.config.js
+    - ./package.json:/app/package.json
+    - ./protractor.conf.js:/app/protractor.conf.js
+    - ./tsconfig.json:/app/tsconfig.json
+    - ./tslint.json:/app/tslint.json
+    - ./yarn.lock:/app/yarn.lock
   env_file:
     - .env
   ports:
@@ -9,3 +19,4 @@ play:
   command: serve
   environment:
     VIRTUAL_HOST: play.prx.docker
+    LOCAL_ENV: "true"

@@ -20,6 +20,7 @@ describe('PlaylistComponent', () => {
     comp = fixture.componentInstance;
     de = fixture.debugElement.query(By.css('.playlist-container'));
     el = de.nativeElement;
+    el.style.display = 'none';
 
     comp.episodes = [
       { index: 0, title: 'Foo', duration: 10 },

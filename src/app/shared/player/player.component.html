@@ -5,7 +5,7 @@
       <div class="artwork">
         <div class="artworkBackground" [class.loaded]="!!artworkSafeLoaded" [style.background-image]="artworkSafeLoaded"></div>
         <img *ngIf="artworkUrl" [src]="artworkUrl" (load)="artworkLoaded()" style="display:none"/>
-        <button (click)="togglePlayPause()" id="large-playback-control-button">
+        <button (click)="togglePlayPause()" id="large-playback-control-button" [attr.aria-label]="player.paused ? 'play' : 'pause'">
           <img src="/assets/images/large-semi-transparent-play.svg" alt="" *ngIf="player.paused" load-render>
           <img class="pauseButton" src="/assets/images/large-semi-transparent-pause.svg" alt="" *ngIf="!player.paused">
         </button>
@@ -20,17 +20,17 @@
         </header>
         <div class="controls">
           <div class="buttons" (window:keydown)="handleHotkey($event)">
-            <button (click)="seekBy(-5)" id="rewind-control-button">
+            <button (click)="seekBy(-5)" id="rewind-control-button" aria-label="rewind">
               <img src="/assets/images/back-5.svg" alt="">
             </button>
-            <button (click)="togglePlayPause()" id="playback-control-button">
+            <button (click)="togglePlayPause()" id="playback-control-button" [attr.aria-label]="player.paused ? 'play' : 'pause'">
               <img src="/assets/images/play.svg" alt="" *ngIf="player.paused" load-render>
               <img class="pauseButton" src="/assets/images/pause.svg" alt="" *ngIf="!player.paused">
             </button>
-            <button (click)="seekBy(30)" id="forward-control-button">
+            <button (click)="seekBy(30)" id="forward-control-button" aria-label="fast forward">
               <img src="/assets/images/forward-30.svg" alt="">
             </button>
-            <button *ngIf="showPlaylist" (click)="skipTrack()" id="skip-button-1">
+            <button *ngIf="showPlaylist" (click)="skipTrack()" id="skip-button-1" aria-label="skip">
               <img src="/assets/images/skip.svg" alt="">
             </button>
 
@@ -52,7 +52,7 @@
             <a (click)="showShareModal()" id="share-button">
               <img class="nav-button" src="/assets/images/share.svg" alt="share">
             </a>
-            <button id="skip-button-2" *ngIf="showPlaylist" (click)="skipTrack()">
+            <button id="skip-button-2" *ngIf="showPlaylist" (click)="skipTrack()" aria-label="skip">
               <img src="/assets/images/skip.svg" alt="">
             </button>
           </nav>

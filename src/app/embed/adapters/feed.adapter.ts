@@ -88,7 +88,7 @@ export class FeedAdapter implements DataAdapter {
           if (!this.isEncoded(itemGuid) && this.isEncoded(episodeGuid)) {
             itemGuid = this.encodeGuid(itemGuid);
           }
-          if (itemGuid.indexOf(episodeGuid) !== -1) {
+          if (itemGuid === episodeGuid) {
             return items[i];
           }
         }

@@ -45,12 +45,15 @@ interface Ad {
     fileName: string,
     imageUrl: string,
     width: number,
+    customData?: {
+      pingbacks?: string[],
+    },
   };
   template: string;
   type: string;
 }
 
-interface Decision {
+export interface AdzerkDecision {
   adId: number;
   creativeId: number;
   flightId: number;
@@ -62,6 +65,6 @@ interface Decision {
 }
 
 export interface AdzerkResponse {
-  decisions: {[key: string]: Decision};
+  decisions: {[key: string]: AdzerkDecision};
   user?: User;
 }

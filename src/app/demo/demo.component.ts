@@ -9,7 +9,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
       <div id="toolbar">
         <label for="bg-color">Background color:</label>
-        <input type="text" id="bg-color" (change)="setColor(colorInput.value)" #colorInput>
+        <input type="text" [(ngModel)]="backgroundColor" id="bg-color">
+        <label for="feed-url">Feed url:</label>
+        <input type="text" [ngModel]="feedUrl" (ngModelChange)="setFeedUrl($event)" id="feed-url" style="width:300px">
       </div>
 
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -20,26 +22,33 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
         <iframe [src]="demoSrc" frameborder="0" width="650" height="200"></iframe>
       </div>
 
+      <div style="margin: 20px; text-align: center">
+        <a [href]="demoSrc" target="_blank">Open iframe link</a>
+      </div>
+
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, r
         atione ad labore nobis ipsam nihil atque. Harum necessitatibus a, commodi
         impedit corrupti asperiores. Recusandae error soluta ut. Eius modi, non.</p>
 
-      <div style="margin: 20px auto; width: 500px; height: 500px; z-index: 20; position: relative;">
-        <iframe [src]="demoSrc" frameborder="0" width="500" height="500"></iframe>
+      <div style="margin: 20px auto; width: 500px; z-index: 20; position: relative;">
+        <iframe [src]="demoSrc" frameborder="0" width="500"></iframe>
       </div>
 
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-        nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-        officia deserunt mollit anim id est laborum.</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-        culpa qui officia deserunt mollit anim id est laborum.</p>
+      <div style="margin: 20px; text-align: center">
+        <a [href]="demoSrc" target="_blank">Open iframe link</a>
+      </div>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, r
+        atione ad labore nobis ipsam nihil atque. Harum necessitatibus a, commodi
+        impedit corrupti asperiores. Recusandae error soluta ut. Eius modi, non.</p>
+
+      <div style="margin: auto; width: 600px; height: 650px; z-index: 20; position: relative; border: 1px solid #ddd">
+        <iframe [src]="demoPlaylist" frameborder="0" width="600" height="100%"></iframe>
+      </div>
+
+      <div style="margin: 20px; text-align: center">
+        <a [href]="demoPlaylist" target="_blank">Open iframe link</a>
+      </div>
 
     </div>
   `
@@ -49,28 +58,21 @@ export class DemoComponent {
 
   backgroundColor = 'white';
 
+  feedUrl = 'http://feeds.99percentinvisible.org/99percentinvisible';
+
   demoSrc: SafeResourceUrl;
+  demoPlaylist: SafeResourceUrl;
 
-  demoParams = {
-    tt: '214- Loud and Clear',
-    ts: '99% Invisible',
-    tc: '',
-    ua: 'http://www.podtrac.com/pts/redirect.mp3/media.blubrry.com/99percentinvisible' +
-        '/dovetail.prxu.org/99pi/874c3465-0dfc-456e-bf4b-14dcfc29b665/214-Loud-and-Clear.mp3',
-    ui: 'http://cdn.99percentinvisible.org/wp-content/uploads/powerpress/99invisible-logo-1400.jpg',
-    uf: 'https://prx-feed.s3.amazonaws.com/99pi/feed-rss.xml',
-    uc: '',
-    us: 'https://itunes.apple.com/us/podcast/99-invisible/id394775318',
-    gs: '_blank'
-  };
-
-  constructor(sanitizer: DomSanitizer) {
-    let src = '/e?' + this.toQueryString(this.demoParams);
-    this.demoSrc = sanitizer.bypassSecurityTrustResourceUrl(src);
+  constructor(private sanitizer: DomSanitizer) {
+    this.setFeedUrl(this.feedUrl);
   }
 
-  setColor(color: string) {
-    this.backgroundColor = color;
+  setFeedUrl(url: string) {
+    this.feedUrl = url;
+    const src = '/e?' + this.toQueryString({uf: url});
+    this.demoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(src);
+    const list = '/e?' + this.toQueryString({uf: url, sp: 5});
+    this.demoPlaylist = this.sanitizer.bypassSecurityTrustResourceUrl(list);
   }
 
   private toQueryString(obj: {}) {

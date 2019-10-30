@@ -1,6 +1,7 @@
 # (1) cp env-example .env
 # (2) add your ENV overrides here
 # (3) profit
+LOCAL_ENV=true
 
 # Optional player logo (found at src/app/assets/images/[LOGO_NAME]-logo.svg)
 LOGO_NAME=

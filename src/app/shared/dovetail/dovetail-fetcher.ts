@@ -1,5 +1,4 @@
 import { AdzerkRequest } from '../adzerk';
-import { DovetailArrangementEntry } from './dovetail-arrangement';
 import { CancelledError, DovetailFetchError, HttpRequestError, NonDovetailUrlError } from './dovetail-errors';
 
 const GET = 'GET';
@@ -9,14 +8,22 @@ const CONTENT_TYPE = 'Content-Type';
 const APPLICATION_JSON = 'application/json';
 export const DOVETAIL_MATCHER = /\/dovetail(.+)?\.prxu\.org\//;
 
+export interface DovetailResponseEntry {
+  id: string;
+  type: 'original' | 'ad' | 'sonicId' | 'billboard' | 'houseAd' | 'fallback';
+  duration?: number | string;
+  audioUrl?: string;
+}
+
 export interface DovetailResponse {
   program: {
     id: string;
     siteId: number;
     networkId: number;
   };
-  arrangement: DovetailArrangementEntry[];
+  arrangement: DovetailResponseEntry[];
   request: AdzerkRequest;
+  tracker: string;
 }
 
 export class DovetailFetcher {
@@ -72,14 +79,6 @@ export class DovetailFetcher {
       if (request.getResponseHeader(CONTENT_TYPE) === APPLICATION_JSON) {
         if (request.readyState >= 4) {
           let response =  JSON.parse(request.responseText) as DovetailResponse;
-          for (let entry of response.arrangement) {
-            if (!entry.type) {
-              entry.type = 'ad';
-            }
-            if (typeof entry.duration === 'string') {
-              entry.duration = parseFloat('' + entry.duration);
-            }
-          }
           this.toResolve(response);
         }
       } else {
