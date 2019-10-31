@@ -19,6 +19,9 @@ describe('FeedAdapter', () => {
         <itunes:image href="http://channel/image.png"/>
         <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" href="http://atom/self/link"/>
         <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/"/>
+        <atom:link rel="me" href="https://podcasts.apple.com/us/podcast/the-adventure-zone/id947899573"/>
+        <atom:link rel="me"
+          href="https://podcasts.google.com/?feed=aHR0cDovL2ZlZWRzLjk5cGVyY2VudGludmlzaWJsZS5vcmcvOTlwZXJjZW50aW52aXNpYmxl" />
         <item>
           <guid isPermaLink="false">guid-1</guid>
           <title>Title #1</title>
@@ -43,25 +46,58 @@ describe('FeedAdapter', () => {
     </rss>
   `;
 
+  const TEST_FEED_MULTIPLE_SELF_LINKS = `<?xml version="1.0" encoding="UTF-8" ?>
+    <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+      <channel>
+        <title>The Channel Title</title>
+        <itunes:image href="http://channel/image.png"/>
+        <atom:link rel="self" href="http://atom/self/link/html"/>
+        <atom:link rel="self" type="application/rss+xml" href="http://atom/self/link/xml"/>
+        <item>
+          <guid isPermaLink="false">guid-1</guid>
+          <title>Title #1</title>
+          <itunes:image href="http://item1/image.png"/>
+          <itunes:duration>1:00</itunes:duration>
+          <enclosure url="http://item1/enclosure.mp3"/>
+        </item>
+      </channel>
+    </rss>
+  `;
+
+  const TEST_FEED_NO_SELF_LINKS = `<?xml version="1.0" encoding="UTF-8" ?>
+    <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+      <channel>
+        <title>The Channel Title</title>
+        <itunes:image href="http://channel/image.png"/>
+        <item>
+          <guid isPermaLink="false">guid-1</guid>
+          <title>Title #1</title>
+          <itunes:image href="http://item1/image.png"/>
+          <itunes:duration>1:00</itunes:duration>
+          <enclosure url="http://item1/enclosure.mp3"/>
+        </item>
+      </channel>
+    </rss>
+  `;
+
   // helper to sync-get properties
-  const getProperties = (feed, feedUrl = null, guid = null, numEps = null): any => {
-    const params = {};
+  const getProperties = (feed, feedUrl?, guid?, numEps?): any => {
     const props = {};
-    if (feedUrl) { params[EMBED_FEED_URL_PARAM] = feedUrl; }
-    if (guid) { params[EMBED_EPISODE_GUID_PARAM] = guid; }
-    if (numEps) { params[EMBED_SHOW_PLAYLIST_PARAM] = numEps; }
-    feed.getProperties(params).subscribe(result => {
-      Object.keys(result).forEach(k => props[k] = result[k]);
-    });
+    const params = {
+      [EMBED_FEED_URL_PARAM]: feedUrl,
+      [EMBED_EPISODE_GUID_PARAM]: guid,
+      [EMBED_SHOW_PLAYLIST_PARAM]: numEps
+    };
+    feed.getProperties(params).subscribe(result => Object.assign(props, result));
     return props;
   };
 
   it('only runs when feedUrl is set', injectHttp((feed: FeedAdapter, mocker) => {
     mocker(TEST_FEED);
-    expect(getProperties(feed, null, null, null)).toEqual({});
-    expect(getProperties(feed, 'http://some.where/feed.xml', null, null)).not.toEqual({});
-    expect(getProperties(feed, null, '1234', null)).toEqual({});
-    expect(getProperties(feed, 'http://some.where/feed.xml', '1234', null)).not.toEqual({});
+    expect(getProperties(feed)).toEqual({});
+    expect(getProperties(feed, 'http://some.where/feed.xml')).not.toEqual({});
+    expect(getProperties(feed, undefined, '1234')).toEqual({});
+    expect(getProperties(feed, 'http://some.where/feed.xml', '1234')).not.toEqual({});
     expect(getProperties(feed, 'http://some.where/feed.xml', '1234', 2)).not.toEqual({});
   }));
 
@@ -78,22 +114,46 @@ describe('FeedAdapter', () => {
     expect(props.episodes.length).toEqual(2);
   }));
 
+  it ('parses app links', injectHttp((feed: FeedAdapter, mocker) => {
+    mocker(TEST_FEED);
+    const props = getProperties(feed, 'https://example.com/feed.xml');
+    expect(props.appLinks).toBeDefined();
+    expect(props.appLinks.apple).toEqual('https://podcasts.apple.com/us/podcast/the-adventure-zone/id947899573');
+    expect(props.appLinks.google)
+      .toEqual('https://podcasts.google.com/?feed=aHR0cDovL2ZlZWRzLjk5cGVyY2VudGludmlzaWJsZS5vcmcvOTlwZXJjZW50aW52aXNpYmxl');
+    expect(props.appLinks.rss).toEqual('http://atom/self/link');
+  }));
+
+  describe('atom self link parsing', () => {
+    it ('works when multiple self links are included', injectHttp((feed: FeedAdapter, mocker) => {
+      mocker(TEST_FEED_MULTIPLE_SELF_LINKS);
+      const props = getProperties(feed, 'https://example.com/feed.xml');
+      expect(props.appLinks.rss).toEqual('http://atom/self/link/xml');
+    }));
+
+    it ('falls back to the requested URL when no self links are included', injectHttp((feed: FeedAdapter, mocker) => {
+      mocker(TEST_FEED_NO_SELF_LINKS);
+      const props = getProperties(feed, 'https://example.com/feed.xml');
+      expect(props.appLinks.rss).toEqual('https://example.com/feed.xml');
+    }));
+  });
+
   it('does not fallback to channel artwork at this level', injectHttp((feed: FeedAdapter, mocker) => {
     mocker(TEST_FEED);
-    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-2', null);
+    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-2');
     expect(props.artworkUrl).toBeUndefined();
     expect(props.feedArtworkUrl).toEqual('http://channel/image.png');
   }));
 
   it('falls back to the enclosure for audioUrl', injectHttp((feed: FeedAdapter, mocker) => {
     mocker(TEST_FEED);
-    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-2', null);
+    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-2');
     expect(props.audioUrl).toEqual('http://item2/enclosure.mp3');
   }));
 
   it('can not find a guid', injectHttp((feed: FeedAdapter, mocker) => {
     mocker(TEST_FEED);
-    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-not-found', null);
+    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-not-found');
     expect(props.audioUrl).toBeUndefined();
     expect(props.title).toBeUndefined();
     expect(props.subtitle).toEqual('The Channel Title');
@@ -105,17 +165,17 @@ describe('FeedAdapter', () => {
 
   it('can not find anything at all', injectHttp((feed: FeedAdapter, mocker) => {
     mocker('');
-    expect(getProperties(feed, 'whatev', 'guid', null)).toEqual({});
+    expect(getProperties(feed, 'whatev', 'guid')).toEqual({});
   }));
 
   it('handles parser errors', injectHttp((feed: FeedAdapter, mocker) => {
     mocker('{"some":"json"}');
-    expect(getProperties(feed, 'whatev', 'guid', null)).toEqual({});
+    expect(getProperties(feed, 'whatev', 'guid')).toEqual({});
   }));
 
   it('handles http errors', injectHttp((feed: FeedAdapter, mocker) => {
     mocker('', 500);
-    expect(getProperties(feed, 'whatev', 'guid', null)).toEqual({});
+    expect(getProperties(feed, 'whatev', 'guid')).toEqual({});
   }));
 
   it('configures a proxy url', injectHttp((feed: FeedAdapter, mocker) => {

@@ -1,4 +1,6 @@
 import { Observable } from 'rxjs/Observable';
+import { AppLinks } from './applinks';
+export { AppLinks, toAppLinks } from './applinks';
 
 export const PropNames = [
   'audioUrl',
@@ -23,6 +25,7 @@ export interface AdapterProperties {
   feedArtworkUrl?: string;
   episodes?: Array<AdapterProperties>;
   index?: number;
+  appLinks?: AppLinks;
 }
 
 export interface DataAdapter {

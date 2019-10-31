@@ -6,7 +6,7 @@ import {
   EMBED_EPISODE_GUID_PARAM,
   EMBED_SHOW_PLAYLIST_PARAM
 } from './../embed.constants';
-import { AdapterProperties, DataAdapter } from './adapter.properties';
+import { AdapterProperties, DataAdapter, AppLinks, toAppLinks } from './adapter.properties';
 import { sha1 } from './sha1';
 
 const GUID_PREFIX = 's1!';
@@ -40,7 +40,7 @@ export class FeedAdapter implements DataAdapter {
 
   processFeed(feedUrl: string, episodeGuid?: string, numEpisodes?: number | string): Observable<AdapterProperties> {
     return this.fetchFeed(feedUrl).map(body => {
-      const props = this.parseFeed(body, episodeGuid, numEpisodes);
+      const props = this.parseFeed(body, episodeGuid, numEpisodes, feedUrl);
       Object.keys(props).filter(k => props[k] === undefined).forEach(key => delete props[key]);
       return props;
     }).catch(err => {
@@ -62,10 +62,15 @@ export class FeedAdapter implements DataAdapter {
     });
   }
 
-  parseFeed(xml: string, episodeGuid?: string, numEpisodes?: number | string): AdapterProperties {
+  parseFeed(xml: string, episodeGuid?: string, numEpisodes?: number | string, requestedUrl?: string): AdapterProperties {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xml, 'application/xml') as XMLDocument;
-    let props = this.processDoc(doc);
+
+    if (doc.getRootNode().childNodes[0].nodeName !== 'rss') {
+      return {};
+    }
+
+    let props = this.processDoc(doc, {}, requestedUrl);
 
     if (numEpisodes) {
       const episodes = this.parseFeedEpisodes(doc, numEpisodes);
@@ -113,11 +118,11 @@ export class FeedAdapter implements DataAdapter {
     });
   }
 
-  processDoc(doc: XMLDocument, props: AdapterProperties = {}): AdapterProperties {
+  processDoc(doc: XMLDocument, props: AdapterProperties = {}, requestedUrl?: string): AdapterProperties {
     props.subtitle = this.getTagText(doc, 'title');
     props.subscribeUrl = this.getTagAttributeNS(doc, ATOM_NAMESPACE, 'link', 'href'); // TODO: what if this isn't the first link?
     props.feedArtworkUrl = this.getTagAttributeNS(doc, ITUNES_NAMESPACE, 'image', 'href');
-
+    props.appLinks = this.getAppLinks(doc, requestedUrl);
     return props;
   }
 
@@ -166,6 +171,20 @@ export class FeedAdapter implements DataAdapter {
     }
   }
 
+  protected getAppLinks(doc: XMLDocument, requestedUrl?: string): AppLinks {
+    const linkTags = Array.from(doc.getElementsByTagNameNS(ATOM_NAMESPACE, 'link'));
+    const selfLinks = linkTags.filter(el => el.getAttribute('rel') === 'self');
+    const rss = this.getRssLink(selfLinks) || requestedUrl;
+    const urls = linkTags.filter(el => el.getAttribute('rel') === 'me').map(el => el.getAttribute('href'));
+    return {rss, ...toAppLinks(urls)};
+  }
+
+  protected getRssLink(links: Element[]): string | undefined {
+    if (!links || !links.length) {
+      return;
+    }
+    return (links.find(link => link.getAttribute('type') === 'application/rss+xml') || links[0]).getAttribute('href');
+  }
 
   protected getTagTextNS(el: Element | XMLDocument, namespace: string, tag: string): string {
     const found = el.getElementsByTagNameNS(namespace, tag);

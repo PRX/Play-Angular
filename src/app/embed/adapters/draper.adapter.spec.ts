@@ -2,6 +2,7 @@ import { testService, injectHttp } from '../../../testing';
 import { DraperAdapter } from './draper.adapter';
 import { FeedAdapter } from './feed.adapter';
 import { EMBED_FEED_ID_PARAM, EMBED_EPISODE_GUID_PARAM } from '../embed.constants';
+import { AdapterProperties } from './adapter.properties';
 
 describe('DraperAdapter', () => {
 
@@ -21,6 +22,7 @@ describe('DraperAdapter', () => {
         <itunes:image href="http://channel/image.png"/>
         <rp:image href="http://channel/rp/image.png"/>
         <rp:program-id>foo</rp:program-id>
+        <rp:slug>agreatslug</rp:slug>
         <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" href="http://atom/self/link"/>
         <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/"/>
         <item></item>
@@ -44,22 +46,21 @@ describe('DraperAdapter', () => {
   `;
 
   // helper to sync-get properties
-  const getProperties = (feed, feedId = null, guid = null): any => {
-    const params = {};
+  const getProperties = (feed: DraperAdapter, feedId?: string, guid?: string): AdapterProperties => {
+    const params = {
+      [EMBED_FEED_ID_PARAM]: feedId,
+      [EMBED_EPISODE_GUID_PARAM]: guid
+    };
     const props = {};
-    if (feedId) { params[EMBED_FEED_ID_PARAM] = feedId; }
-    if (guid) { params[EMBED_EPISODE_GUID_PARAM] = guid; }
-    feed.getProperties(params).subscribe(result => {
-      Object.keys(result).forEach(k => props[k] = result[k]);
-    });
+    feed.getProperties(params).subscribe(result => Object.assign(props, result));
     return props;
   };
 
   it('only runs when feedId is set', injectHttp((feed: DraperAdapter, mocker) => {
     mocker(TEST_DRAPE);
-    expect(getProperties(feed, null, null)).toEqual({});
-    expect(getProperties(feed, 'http://some.where/feed.xml', null)).not.toEqual({});
-    expect(getProperties(feed, null, '1234')).toEqual({});
+    expect(getProperties(feed)).toEqual({});
+    expect(getProperties(feed, 'http://some.where/feed.xml')).not.toEqual({});
+    expect(getProperties(feed, undefined, '1234')).toEqual({});
     expect(getProperties(feed, 'http://some.where/feed.xml', '1234')).not.toEqual({});
   }));
 
@@ -69,10 +70,16 @@ describe('DraperAdapter', () => {
     expect(props.audioUrl).toEqual('http://item1/original.mp3');
     expect(props.title).toEqual('Title #1');
     expect(props.subtitle).toEqual('The Channel Title');
-    expect(props.subscribeUrl).toEqual('https://play.radiopublic.com/foo/ep/s1!e661165c969fa6801bb8a7711daa73544b5149e9');
+    expect(props.subscribeUrl).toEqual('https://radiopublic.com/agreatslug/ep/s1!e661165c969fa6801bb8a7711daa73544b5149e9');
     expect(props.subscribeTarget).toEqual('_top');
     expect(props.artworkUrl).toEqual('http://item1/rp/image.png');
     expect(props.feedArtworkUrl).toEqual('http://channel/rp/image.png');
+  }));
+
+  it('always includes RadioPublic in appLinks', injectHttp((feed: DraperAdapter, mocker) => {
+    mocker(TEST_DRAPE);
+    const props = getProperties(feed, 'http://some.where/feed.xml');
+    expect(props.appLinks.radiopublic).toEqual('https://radiopublic.com/agreatslug');
   }));
 
   it('falls back to the itunes:image if no rp:image', injectHttp((feed: DraperAdapter, mocker) => {
@@ -87,7 +94,7 @@ describe('DraperAdapter', () => {
     expect(props.audioUrl).toBeUndefined();
     expect(props.title).toBeUndefined();
     expect(props.subtitle).toEqual('The Channel Title');
-    expect(props.subscribeUrl).toEqual('https://play.radiopublic.com/foo/ep/s1!f0ac9c9a4b7ad98f1663f828eb6b5587dfce3434');
+    expect(props.subscribeUrl).toEqual('https://radiopublic.com/agreatslug/ep/s1!f0ac9c9a4b7ad98f1663f828eb6b5587dfce3434');
     expect(props.subscribeTarget).toEqual('_top');
     expect(props.artworkUrl).toBeUndefined();
     expect(props.feedArtworkUrl).toEqual('http://channel/rp/image.png');

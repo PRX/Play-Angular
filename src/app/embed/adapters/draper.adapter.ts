@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import { EMBED_FEED_ID_PARAM, EMBED_EPISODE_GUID_PARAM } from './../embed.constants';
-import { AdapterProperties } from './adapter.properties';
+import { AdapterProperties, AppLinks } from './adapter.properties';
 import { FeedAdapter } from './feed.adapter';
 
 const RADIOPUBLIC_NAMESPACE = 'https://www.w3id.org/rp/v1';
@@ -41,11 +41,19 @@ export class DraperAdapter extends FeedAdapter {
     });
   }
 
+  protected getAppLinks(doc: XMLDocument, requestedUrl?: string): AppLinks {
+    const appLinks = super.getAppLinks(doc) || {};
+    if (!appLinks.radiopublic) {
+      appLinks.radiopublic = `https://radiopublic.com/${this.getTagTextNS(doc, RADIOPUBLIC_NAMESPACE, 'slug')}`;
+    }
+    return appLinks;
+  }
+
   processDoc(doc: XMLDocument, props: AdapterProperties = {}): AdapterProperties {
     props = super.processDoc(doc, props);
     props.feedArtworkUrl = this.getTagAttributeNS(doc, RADIOPUBLIC_NAMESPACE, 'image', 'href')
                         || props.feedArtworkUrl;
-    props.subscribeUrl = `https://play.radiopublic.com/${this.getTagTextNS(doc, RADIOPUBLIC_NAMESPACE, 'program-id')}`;
+    props.subscribeUrl = `https://radiopublic.com/${this.getTagTextNS(doc, RADIOPUBLIC_NAMESPACE, 'slug')}`;
     return props;
   }
 
@@ -58,7 +66,7 @@ export class DraperAdapter extends FeedAdapter {
   }
 
   proxyUrl(feedId: string): string {
-    return `https://draper.radiopublic.com/transform?program_id=${feedId}`;
+    return `https://draper.radiopublic.com/transform?program_id=${feedId}&target=radiopublic/embed`;
   }
 
   protected getItemGuid(el: Element | XMLDocument): string {
