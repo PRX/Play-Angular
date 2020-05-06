@@ -1,6 +1,11 @@
 import { testService, injectHttp } from '../../../testing';
 import { FeedAdapter } from './feed.adapter';
-import { EMBED_FEED_URL_PARAM, EMBED_EPISODE_GUID_PARAM, EMBED_SHOW_PLAYLIST_PARAM } from '../embed.constants';
+import {
+  EMBED_FEED_URL_PARAM,
+  EMBED_EPISODE_GUID_PARAM,
+  EMBED_SHOW_PLAYLIST_PARAM,
+  EMBED_PLAYLIST_SEASON_PARAM
+} from '../embed.constants';
 
 describe('FeedAdapter', () => {
 
@@ -24,6 +29,7 @@ describe('FeedAdapter', () => {
           <title>Title #1</title>
           <itunes:image href="http://item1/image.png"/>
           <itunes:duration>1:00</itunes:duration>
+          <itunes:season>1</itunes:season>
           <enclosure url="http://item1/enclosure.mp3"/>
           <feedburner:origEnclosureLink>http://item1/original.mp3</feedburner:origEnclosureLink>
         </item>
@@ -31,6 +37,7 @@ describe('FeedAdapter', () => {
           <guid isPermaLink="false">guid-23</guid>
           <itunes:duration>34:03:05</itunes:duration>
           <title>Title #23</title>
+          <itunes:season>2</itunes:season>
           <enclosure url="http://item23/enclosure.mp3"/>
         </item>
         <item>
@@ -44,12 +51,13 @@ describe('FeedAdapter', () => {
   `;
 
   // helper to sync-get properties
-  const getProperties = (feed, feedUrl = null, guid = null, numEps = null): any => {
+  const getProperties = (feed, feedUrl = null, guid = null, numEps = null, season = null): any => {
     const params = {};
     const props = {};
     if (feedUrl) { params[EMBED_FEED_URL_PARAM] = feedUrl; }
     if (guid) { params[EMBED_EPISODE_GUID_PARAM] = guid; }
     if (numEps) { params[EMBED_SHOW_PLAYLIST_PARAM] = numEps; }
+    if (season) { params[EMBED_PLAYLIST_SEASON_PARAM] = season; }
     feed.getProperties(params).subscribe(result => {
       Object.keys(result).forEach(k => props[k] = result[k]);
     });
@@ -76,6 +84,23 @@ describe('FeedAdapter', () => {
     expect(props.artworkUrl).toEqual('http://item1/image.png');
     expect(props.feedArtworkUrl).toEqual('http://channel/image.png');
     expect(props.episodes.length).toEqual(2);
+    expect(props.episodes[0].title).toEqual('Title #1')
+    expect(props.episodes[1].title).toEqual('Title #23')
+  }));
+
+  it('parses serial feeds', injectHttp((feed: FeedAdapter, mocker) => {
+    mocker(TEST_FEED.replace('<channel>', '<channel><itunes:type>serial</itunes:type>'));
+    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-1', 2);
+    expect(props.episodes.length).toEqual(2);
+    expect(props.episodes[0].title).toEqual('Title #2')
+    expect(props.episodes[1].title).toEqual('Title #23')
+  }));
+
+  it('filters episodes by season', injectHttp((feed: FeedAdapter, mocker) => {
+    mocker(TEST_FEED);
+    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-1', 'all', 2);
+    expect(props.episodes.length).toEqual(1);
+    expect(props.episodes[0].title).toEqual('Title #23')
   }));
 
   it('does not fallback to channel artwork at this level', injectHttp((feed: FeedAdapter, mocker) => {
