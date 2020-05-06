@@ -110,6 +110,7 @@ label {
 }
 
 .builder-step input[type='text'],
+.builder-step input[type='number'],
 .builder-step input[type='url'] {
   font-size: 14px;
   margin: 5px 0;
@@ -158,7 +159,8 @@ label {
   display: block;
 }
 
-.builder-step fieldset input[type='text'] {
+.builder-step fieldset input[type='text'],
+.builder-step fieldset input[type='number'] {
   margin-top: 0;
 }
 

@@ -2,7 +2,8 @@ import { EMBED_FEED_URL_PARAM, EMBED_EPISODE_GUID_PARAM,
   EMBED_TITLE_PARAM, EMBED_SUBTITLE_PARAM, EMBED_CTA_TITLE_PARAM,
   EMBED_AUDIO_URL_PARAM, EMBED_IMAGE_URL_PARAM,
   EMBED_CTA_URL_PARAM, EMBED_SUBSCRIBE_URL_PARAM, EMBED_SUBSCRIBE_TARGET,
-  EMBED_SHOW_PLAYLIST_PARAM, EMBED_EP_IMAGE_URL_PARAM } from '../embed';
+  EMBED_SHOW_PLAYLIST_PARAM, EMBED_EP_IMAGE_URL_PARAM,
+  EMBED_PLAYLIST_SEASON_PARAM } from '../embed';
 
 export class BuilderProperties {
 
@@ -19,7 +20,8 @@ export class BuilderProperties {
       params[EMBED_CTA_URL_PARAM],
       params[EMBED_SUBSCRIBE_URL_PARAM],
       params[EMBED_SUBSCRIBE_TARGET],
-      params[EMBED_SHOW_PLAYLIST_PARAM]
+      params[EMBED_SHOW_PLAYLIST_PARAM],
+      params[EMBED_PLAYLIST_SEASON_PARAM]
     );
   }
 
@@ -40,7 +42,8 @@ export class BuilderProperties {
     public ctaUrl?: string,
     public subscribeUrl?: string,
     public subscribeTarget?: string,
-    public playlistLength?: number | string
+    public playlistLength?: number | string,
+    public playlistSeason?: number | string
   ) {}
 
   get allParams () {
@@ -56,7 +59,8 @@ export class BuilderProperties {
       ctaUrl: EMBED_CTA_URL_PARAM,
       subscribeUrl: EMBED_SUBSCRIBE_URL_PARAM,
       subscribeTarget: EMBED_SUBSCRIBE_TARGET,
-      playlistLength: EMBED_SHOW_PLAYLIST_PARAM
+      playlistLength: EMBED_SHOW_PLAYLIST_PARAM,
+      playlistSeason: EMBED_PLAYLIST_SEASON_PARAM
     };
   }
 

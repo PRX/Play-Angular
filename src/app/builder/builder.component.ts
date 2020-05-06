@@ -23,6 +23,7 @@ export class BuilderComponent implements OnInit {
   editMode = false;
   playLatest = false;
   playPlaylist = false;
+  playSeason = false;
   feedError = false;
   sslError: string = null;
 
@@ -69,8 +70,10 @@ export class BuilderComponent implements OnInit {
     this.playPlaylist = !this.playPlaylist;
     if (this.playPlaylist) {
       this.props.playlistLength = this.props.playlistLength || 10;
+      this.props.playlistSeason = this.props.playlistSeason || null;
     } else {
       this.props.playlistLength = 0;
+      this.props.playlistSeason = null;
     }
     this.resetPreviewIframe();
   }
