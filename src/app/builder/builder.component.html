@@ -65,9 +65,8 @@
             </select>
           </fieldset>
           <fieldset *ngIf="playPlaylist">
-            <p>Optionally play a single itunes:season of your podcast. Leave blank to include all episodes</p>
-            <input type="number" [(ngModel)]="props.playlistSeason"
-              placeholder="Season Number" min="1" max="999">
+            <p>Optionally filter to a single itunes:season of your podcast. Leave blank to include all episodes.</p>
+            <input type="number" [(ngModel)]="props.playlistSeason" placeholder="Season Number" min="1" max="999">
           </fieldset>
         </fieldset>
 
