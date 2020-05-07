@@ -55,7 +55,7 @@
             Make It A Playlist
           </label>
           <fieldset *ngIf="playPlaylist">
-            <p>This will create a playlist from your RSS feed, starting with the most recent episode. The list of upcoming episodes will appear underneath the regular player.</p>
+            <p>This will create a playlist from your RSS feed. The list of upcoming episodes will appear underneath the regular player.</p>
             <select [(ngModel)]="props.playlistLength">
               <option value="5">5 episodes in playlist</option>
               <option value="10">10 episodes in playlist</option>
@@ -63,6 +63,14 @@
               <option value="20">20 episodes in playlist</option>
               <option value="all">All episodes in playlist</option>
             </select>
+          </fieldset>
+          <label *ngIf="playPlaylist">
+            <input type="checkbox" [checked]="playSeason" (change)="togglePlaySeason()">
+            Play a single season
+          </label>
+          <fieldset *ngIf="playSeason">
+            <p>Optionally filter to a single itunes:season of your podcast.</p>
+            <input type="number" [(ngModel)]="props.playlistSeason" placeholder="Season Number" min="1" max="999">
           </fieldset>
         </fieldset>
 

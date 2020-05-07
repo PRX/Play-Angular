@@ -23,6 +23,7 @@ export class BuilderComponent implements OnInit {
   editMode = false;
   playLatest = false;
   playPlaylist = false;
+  playSeason = false;
   feedError = false;
   sslError: string = null;
 
@@ -71,6 +72,17 @@ export class BuilderComponent implements OnInit {
       this.props.playlistLength = this.props.playlistLength || 10;
     } else {
       this.props.playlistLength = 0;
+    }
+    this.resetPreviewIframe();
+  }
+
+  togglePlaySeason() {
+    this.playSeason = !this.playSeason;
+    if (this.playSeason) {
+      this.props.playlistSeason = this.props.playlistSeason || 1;
+      this.props.playlistLength = 'all';
+    } else {
+      this.props.playlistSeason = null;
     }
     this.resetPreviewIframe();
   }
