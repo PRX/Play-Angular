@@ -17,6 +17,11 @@ html(lang='en')
             data-position="top"
             data-moreinfo="https://exchange.prx.org/privacy-policy"
             data-message="We use cookies.")
+    style.
+      /* WHY OH WHY doesn't data-padding or data-on-inserted work??? */
+      .cookiebanner {
+        padding: 0px 16px !important;
+      }
   body(style="margin: 0")
     play-root
       != loadingMarkup
