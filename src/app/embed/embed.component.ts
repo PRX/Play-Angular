@@ -46,9 +46,10 @@ const RequestAnimationFrame = window['requestAnimationFrame']
   styleUrls: ['embed.component.css'],
   providers: [MergeAdapter, QSDAdapter, DraperAdapter, FeedAdapter],
   template: `
-    <play-share-modal *ngIf="showShareModal" (close)="hideModal()"></play-share-modal>
+    <play-share-modal *ngIf="showShareModal" [mode]="showShareModalMode" (close)="hideModal()"></play-share-modal>
     <play-player [feedArtworkUrl]="feedArtworkUrl" [audioUrl]="audioUrl" [title]="title" [subtitle]="subtitle"
-      [subscribeUrl]="subscribeUrl" [subscribeTarget]="subscribeTarget" [artworkUrl]="artworkUrl" (share)="showModal()"
+      [subscribeUrl]="subscribeUrl" [subscribeTarget]="subscribeTarget" [artworkUrl]="artworkUrl"
+      (cookie)="showModal('cookie')" (share)="showModal('share')"
       [showPlaylist]="showPlaylist" [episodes]="episodes" (play)="onPlay($event)" (pause)="onPause($event)"
       (ended)="onEnded($event)" (download)="onDownload($event)" (downloadUrl)="onDownloadUrl($event)" [duration]="duration">
       <ng-template let-dismiss="dismiss">
@@ -79,6 +80,7 @@ const RequestAnimationFrame = window['requestAnimationFrame']
 export class EmbedComponent implements OnInit {
 
   showShareModal = false;
+  showShareModalMode: string;
   hasInteracted = false;
   downloadRequested = false;
   downloadAudioUrl: string;
@@ -122,7 +124,8 @@ export class EmbedComponent implements OnInit {
     });
   }
 
-  showModal() {
+  showModal(mode: string) {
+    this.showShareModalMode = mode;
     this.showShareModal = true;
   }
 

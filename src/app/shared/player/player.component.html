@@ -43,6 +43,9 @@
           </div>
 
           <nav>
+            <a (click)="showCookieModal()" id="cookie-button">
+              <img class="nav-button" src="/assets/images/cookie.svg" alt="cookies">
+            </a>
             <a *ngIf="audioUrl || initialLoading" load-render [href]="audioUrl" (click)="requestDownload($event)" [target]="subscribeTarget">
               <img class="nav-button" src="/assets/images/download.svg" alt="download">
             </a>

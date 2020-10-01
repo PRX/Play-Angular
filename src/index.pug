@@ -11,17 +11,6 @@ html(lang='en')
       link(rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro")
     for script in scripts
       link(rel="preload", href=script, as="script")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/cookie-banner/1.2.2/cookiebanner.min.js",
-            id="cookiebanner",
-            type="text/javascript",
-            data-position="top"
-            data-moreinfo="https://exchange.prx.org/privacy-policy"
-            data-message="We use cookies.")
-    style.
-      /* WHY OH WHY doesn't data-padding or data-on-inserted work??? */
-      .cookiebanner {
-        padding: 0px 16px !important;
-      }
   body(style="margin: 0")
     play-root
       != loadingMarkup

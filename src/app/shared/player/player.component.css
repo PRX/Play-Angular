@@ -333,6 +333,12 @@ nav a:hover {
   height: 0;
 }
 
+#cookie-button .nav-button {
+  width: 20px;
+  height: 20px;
+  padding: 6px;
+}
+
 .scrubber {
   display: flex;
   justify-content: space-around;

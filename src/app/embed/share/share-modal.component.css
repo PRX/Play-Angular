@@ -43,6 +43,12 @@ p {
   padding: 0;
 }
 
+a {
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .embed-code {
   margin: 0;
   border: 0;

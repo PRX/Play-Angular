@@ -33,6 +33,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   @Input() feedArtworkUrl: string;
   @Input() episodes: any[];
   @Input() showPlaylist: boolean;
+  @Output() cookie = new EventEmitter<boolean>();
   @Output() share = new EventEmitter<boolean>();
   @Output() play = new EventEmitter<Event>();
   @Output() pause = new EventEmitter<Event>();
@@ -45,7 +46,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   artworkSafeLoaded: SafeStyle;
 
   overlayEnabled = false;
-  overlayText = "";
+  overlayText = '';
 
   // for playlist feature
   episodeIndex = 0;
@@ -183,6 +184,10 @@ export class PlayerComponent implements OnInit, OnChanges {
     }
   }
 
+  showCookieModal() {
+    this.cookie.emit(true);
+  }
+
   showShareModal() {
     this.share.emit(true);
   }
@@ -216,7 +221,7 @@ export class PlayerComponent implements OnInit, OnChanges {
   }
 
   updatePlayingEpisode(index: number) {
-    let newEpisode = this.episodes[index];
+    const newEpisode = this.episodes[index];
     if (newEpisode) {
       this.episodeIndex = index;
       this.title = newEpisode.title;
