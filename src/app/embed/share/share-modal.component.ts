@@ -20,7 +20,7 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
     <template [ngIf]="mode == 'cookie'">
       <h1>Cookie Policy</h1>
       <p>
-        We use cookies to blah blah blah probably shouldn't just copy gimlet here. See our
+        We use cookies to help improve our player. See our
         <a target="blank" href="https://exchange.prx.org/privacy-policy">Privacy Policy</a>
         for more details.
       </p>
