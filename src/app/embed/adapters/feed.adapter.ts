@@ -132,7 +132,7 @@ export class FeedAdapter implements DataAdapter {
   processEpisode(item: Element, props: AdapterProperties = {}): AdapterProperties {
     props.title = this.getTagText(item, 'title');
     props.audioUrl = this.getTagTextNS(item, FEEDBURNER_NAMESPACE, 'origEnclosureLink')
-                  || this.getTagAttribute(item, 'enclosure', 'url');
+                  || this.getTagAttribute(item, 'enclosure', 'url') || null;
     props.artworkUrl = this.getTagAttributeNS(item, ITUNES_NAMESPACE, 'image', 'href');
     const duration = this.getTagTextNS(item, ITUNES_NAMESPACE, 'duration');
     props.duration = duration ? this.durationInSec(duration) : 0;
