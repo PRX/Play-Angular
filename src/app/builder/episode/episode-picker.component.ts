@@ -82,7 +82,11 @@ export class EpisodePickerComponent implements OnChanges, OnInit {
           return txt.value;
         }(item.querySelector('title').innerHTML);
 
-        let encUrl = item.querySelector('enclosure').getAttribute('url');
+        let encUrl = null;
+        let enc = item.querySelector('enclosure');
+        if (enc) {
+          encUrl = enc.getAttribute('url');
+        }
 
         let epImg = feedImg;
         let __img = Array.from(item.querySelectorAll('*[href]')).filter(e => e.nodeName === 'itunes:image')[0];
