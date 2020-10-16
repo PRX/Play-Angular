@@ -5,7 +5,7 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
   styleUrls: ['share-modal.component.css'],
   template: `
     <button class="close-btn" (click)="closeModal()" (window:keydown)="handleKeypress($event)">✖</button>
-    <template [ngIf]="mode == 'share'">
+    <ng-template [ngIf]="mode == 'share'">
       <h1>Use this player on your site</h1>
       <p>You can embed this player on your own site by including the following <code>iframe</code> tag.</p>
 
@@ -16,15 +16,15 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
       </div>
 
       <a [href]="customizeHref" id="customize-btn" target="_blank">Customize this player</a>
-    </template>
-    <template [ngIf]="mode == 'cookie'">
+    </ng-template>
+    <ng-template [ngIf]="mode == 'cookie'">
       <h1>Cookie Policy</h1>
       <p>
         We use cookies to help improve our player. See our
         <a target="blank" href="https://exchange.prx.org/privacy-policy">Privacy Policy</a>
         for more details.
       </p>
-    </template>
+    </ng-template>
   `
 })
 
