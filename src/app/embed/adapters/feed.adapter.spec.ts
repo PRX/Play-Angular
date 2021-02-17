@@ -4,7 +4,8 @@ import {
   EMBED_FEED_URL_PARAM,
   EMBED_EPISODE_GUID_PARAM,
   EMBED_SHOW_PLAYLIST_PARAM,
-  EMBED_PLAYLIST_SEASON_PARAM
+  EMBED_PLAYLIST_SEASON_PARAM,
+  EMBED_PLAYLIST_CATEGORY_PARAM
 } from '../embed.constants';
 
 describe('FeedAdapter', () => {
@@ -39,7 +40,10 @@ describe('FeedAdapter', () => {
           <title>Title #23</title>
           <itunes:season>2</itunes:season>
           <enclosure url="http://item23/enclosure.mp3"/>
-        </item>
+          <category>
+            <![CDATA[second]]>
+          </category>
+          </item>
         <item>
           <guid isPermaLink="false">guid-2</guid>
           <itunes:duration>38:00:12</itunes:duration>
@@ -51,13 +55,14 @@ describe('FeedAdapter', () => {
   `;
 
   // helper to sync-get properties
-  const getProperties = (feed, feedUrl = null, guid = null, numEps = null, season = null): any => {
+  const getProperties = (feed, feedUrl = null, guid = null, numEps = null, season = null, cat = null): any => {
     const params = {};
     const props = {};
     if (feedUrl) { params[EMBED_FEED_URL_PARAM] = feedUrl; }
     if (guid) { params[EMBED_EPISODE_GUID_PARAM] = guid; }
     if (numEps) { params[EMBED_SHOW_PLAYLIST_PARAM] = numEps; }
     if (season) { params[EMBED_PLAYLIST_SEASON_PARAM] = season; }
+    if (cat) { params[EMBED_PLAYLIST_CATEGORY_PARAM] = cat; }
     feed.getProperties(params).subscribe(result => {
       Object.keys(result).forEach(k => props[k] = result[k]);
     });
@@ -99,6 +104,13 @@ describe('FeedAdapter', () => {
   it('filters episodes by season', injectHttp((feed: FeedAdapter, mocker) => {
     mocker(TEST_FEED);
     const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-1', 'all', 2);
+    expect(props.episodes.length).toEqual(1);
+    expect(props.episodes[0].title).toEqual('Title #23')
+  }));
+
+  it('filters episodes by category', injectHttp((feed: FeedAdapter, mocker) => {
+    mocker(TEST_FEED);
+    const props = getProperties(feed, 'http://some.where/feed.xml', 'guid-1', 'all', null, 'second');
     expect(props.episodes.length).toEqual(1);
     expect(props.episodes[0].title).toEqual('Title #23')
   }));
