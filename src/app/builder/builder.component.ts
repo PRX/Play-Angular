@@ -24,6 +24,7 @@ export class BuilderComponent implements OnInit {
   playLatest = false;
   playPlaylist = false;
   playSeason = false;
+  playCategory = false;
   feedError = false;
   sslError: string = null;
 
@@ -83,6 +84,17 @@ export class BuilderComponent implements OnInit {
       this.props.playlistLength = 'all';
     } else {
       this.props.playlistSeason = null;
+    }
+    this.resetPreviewIframe();
+  }
+
+  togglePlayCategory() {
+    this.playCategory = !this.playCategory;
+    if (this.playCategory) {
+      this.props.playlistCategory = this.props.playlistCategory || '';
+      this.props.playlistLength = 'all';
+    } else {
+      this.props.playlistCategory = null;
     }
     this.resetPreviewIframe();
   }
