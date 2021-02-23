@@ -72,6 +72,14 @@
             <p>Optionally filter to a single itunes:season of your podcast.</p>
             <input type="number" [(ngModel)]="props.playlistSeason" placeholder="Season Number" min="1" max="999">
           </fieldset>
+          <label *ngIf="playPlaylist">
+            <input type="checkbox" [checked]="playCategory" (change)="togglePlayCategory()">
+            Play a single category
+          </label>
+          <fieldset *ngIf="playCategory">
+            <p>Optionally filter to a single category of your podcast.</p>
+            <input type="text" [(ngModel)]="props.playlistCategory" placeholder="Category">
+          </fieldset>
         </fieldset>
 
         <fieldset>

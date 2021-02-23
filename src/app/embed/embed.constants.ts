@@ -16,3 +16,4 @@ export const EMBED_SUBSCRIBE_TARGET         = 'gs';
 export const EMBED_CTA_TARGET               = 'gc';
 export const EMBED_SHOW_PLAYLIST_PARAM      = 'sp';
 export const EMBED_PLAYLIST_SEASON_PARAM    = 'se';
+export const EMBED_PLAYLIST_CATEGORY_PARAM  = 'ct';

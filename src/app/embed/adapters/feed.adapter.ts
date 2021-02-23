@@ -5,7 +5,8 @@ import {
   EMBED_FEED_URL_PARAM,
   EMBED_EPISODE_GUID_PARAM,
   EMBED_SHOW_PLAYLIST_PARAM,
-  EMBED_PLAYLIST_SEASON_PARAM
+  EMBED_PLAYLIST_SEASON_PARAM,
+  EMBED_PLAYLIST_CATEGORY_PARAM
 } from './../embed.constants';
 import { AdapterProperties, DataAdapter } from './adapter.properties';
 import { sha1 } from './sha1';
@@ -33,16 +34,17 @@ export class FeedAdapter implements DataAdapter {
       numEpisodes = params[EMBED_SHOW_PLAYLIST_PARAM] || 10;
     }
     const season = params[EMBED_PLAYLIST_SEASON_PARAM];
+    const category = params[EMBED_PLAYLIST_CATEGORY_PARAM];
     if (feedUrl) {
-      return this.processFeed(feedUrl, episodeGuid, numEpisodes, season);
+      return this.processFeed(feedUrl, episodeGuid, numEpisodes, season, category);
     } else {
       return Observable.of({});
     }
   }
 
-  processFeed(feedUrl: string, episodeGuid?: string, numEpisodes?: number | string, season?: number | string): Observable<AdapterProperties> {
+  processFeed(feedUrl: string, episodeGuid?: string, numEpisodes?: number | string, season?: number | string, category?: string): Observable<AdapterProperties> {
     return this.fetchFeed(feedUrl).map(body => {
-      const props = this.parseFeed(body, episodeGuid, numEpisodes, season);
+      const props = this.parseFeed(body, episodeGuid, numEpisodes, season, category);
       Object.keys(props).filter(k => props[k] === undefined).forEach(key => delete props[key]);
       return props;
     }).catch(err => {
@@ -64,13 +66,13 @@ export class FeedAdapter implements DataAdapter {
     });
   }
 
-  parseFeed(xml: string, episodeGuid?: string, numEpisodes?: number | string, season?: number | string): AdapterProperties {
+  parseFeed(xml: string, episodeGuid?: string, numEpisodes?: number | string, season?: number | string, category?: string): AdapterProperties {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xml, 'application/xml') as XMLDocument;
     let props = this.processDoc(doc);
 
     if (numEpisodes) {
-      const episodes = this.parseFeedEpisodes(doc, numEpisodes, season);
+      const episodes = this.parseFeedEpisodes(doc, numEpisodes, season, category);
       props.episodes = episodes;
     }
     const episode = this.parseFeedEpisode(doc, episodeGuid);
@@ -103,13 +105,16 @@ export class FeedAdapter implements DataAdapter {
     }
   }
 
-  parseFeedEpisodes(doc: XMLDocument, numEpisodes: number | string, season: number | string): AdapterProperties[] {
+  parseFeedEpisodes(doc: XMLDocument, numEpisodes: number | string, season: number | string, category: string): AdapterProperties[] {
     let episodes = Array.from(doc.querySelectorAll('item'));
     if (this.getTagTextNS(doc, ITUNES_NAMESPACE, 'type') === 'serial') {
       episodes = episodes.reverse();
     }
     if (season) {
       episodes = episodes.filter(el => this.getTagTextNS(el, ITUNES_NAMESPACE, 'season') === `${season}`);
+    }
+    if (category) {
+      episodes = episodes.filter(el => this.getArrayTagText(el, 'category').includes(category));
     }
     if (!isNaN(+numEpisodes)) {
       episodes = episodes.slice(0, +numEpisodes);
@@ -170,15 +175,19 @@ export class FeedAdapter implements DataAdapter {
   protected getTagText(el: Element | XMLDocument, tag: string): string {
     const found = el.getElementsByTagName(tag);
     if (found.length) {
-      return found[0].textContent;
+      return found[0].textContent.trim();
     }
   }
 
+  protected getArrayTagText(el: Element | XMLDocument, tag: string): string[] {
+    const found: Element[] = Array.from(el.getElementsByTagName(tag));
+    return found.map(el => el.textContent.trim());
+  }
 
   protected getTagTextNS(el: Element | XMLDocument, namespace: string, tag: string): string {
     const found = el.getElementsByTagNameNS(namespace, tag);
     if (found.length) {
-      return found[0].textContent;
+      return found[0].textContent.trim();
     }
   }
 
