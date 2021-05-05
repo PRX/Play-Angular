@@ -1,8 +1,6 @@
 version: 0.2
 env:
   variables:
-    PRX_ECR_REGION: "us-east-1"
-    PRX_ECR_REPOSITORY: "play.prx.org"
     PRX_ECR_CONFIG_PARAMETERS: "PlayEcrImageTag"
   parameter-store:
     DOCKERHUB_USERNAME: "/prx/DOCKERHUB_USERNAME"
