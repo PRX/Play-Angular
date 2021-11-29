@@ -18,7 +18,6 @@ phases:
       - echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
   build:
     commands:
-      - "cd $(ls -d */|head -n 1)"
       - "docker-compose -f docker-compose-ci.yml build"
       - "docker-compose -f docker-compose-ci.yml run play ci"
   post_build:
