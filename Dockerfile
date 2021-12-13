@@ -27,10 +27,6 @@ RUN npm run build
 RUN addgroup -g 1000 -S playuser && adduser -u 1000 -S playuser -G playuser
 RUN chown -R playuser:playuser $APP_HOME
 
-ENV TINI_VERSION v0.9.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
-RUN chmod +x /tini
-
 USER playuser
-ENTRYPOINT ["/tini", "--", "./bin/application"]
+ENTRYPOINT ["./bin/application"]
 CMD [ "serve" ]
