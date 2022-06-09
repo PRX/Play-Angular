@@ -14,16 +14,6 @@ ApplicationParseOpts () {
   CMD_ARGS=$*
 }
 
-UpdateEnvironment () {
-  if [ -z "$LOCAL_ENV" ]; then
-    IFS=$'\n'
-    for item in `aws-secrets-get`; do
-      export "$item"
-    done
-    unset IFS
-  fi
-}
-
 ApplicationRun () {
   CMD=
   if [ "$PROCESS" = "help" ] ; then
@@ -33,7 +23,6 @@ ApplicationRun () {
     UpdateEnvironment
     CMD=
   elif [ "$PROCESS" = "serve" ] ; then
-    UpdateEnvironment
     CMD="npm run-script serve"
   else
     CMD="npm run-script $PROCESS"
