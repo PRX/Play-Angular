@@ -2,6 +2,7 @@ FROM mhart/alpine-node:14
 
 MAINTAINER PRX <sysadmin@prx.org>
 LABEL org.prx.app="yes"
+LABEL org.prx.spire.publish.ecr="WEB_SERVER"
 
 ENV APP_HOME /app
 ENV HOME=$APP_HOME

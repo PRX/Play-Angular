@@ -2,12 +2,15 @@ version: 0.2
 env:
   variables:
     PRX_ECR_CONFIG_PARAMETERS: "PlayEcrImageTag"
+    PRX_SPIRE_ECR_PKG_PARAMETERS: WEB_SERVER=/prx/stag/Spire/Dovetail-Play/pkg/docker-image-tag
   parameter-store:
-    DOCKERHUB_USERNAME: "/prx/DOCKERHUB_USERNAME"
-    DOCKERHUB_PASSWORD: "/prx/DOCKERHUB_PASSWORD"
+    DOCKERHUB_USERNAME: /prx/DOCKERHUB_USERNAME
+    DOCKERHUB_PASSWORD: /prx/DOCKERHUB_PASSWORD
   exported-variables:
     - PRX_ECR_CONFIG_PARAMETERS
     - PRX_ECR_IMAGE
+    - PRX_SPIRE_ECR_PKG_PARAMETERS
+    - WEB_SERVER
 phases:
   install:
     runtime-versions:
@@ -18,8 +21,10 @@ phases:
       - echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
   build:
     commands:
-      - "docker-compose -f docker-compose-ci.yml build"
-      - "docker-compose -f docker-compose-ci.yml run play ci"
+      - docker-compose -f docker-compose-ci.yml build
+      - docker-compose -f docker-compose-ci.yml run play ci
   post_build:
     commands:
-      - 'curl -sO "https://raw.githubusercontent.com/PRX/Infrastructure/master/ci/utility/post_build.sh" && chmod +x post_build.sh && . ./post_build.sh'
+      - curl -sO "https://raw.githubusercontent.com/PRX/Infrastructure/main/ci/utility/post_build.sh"
+      - chmod +x post_build.sh
+      - . ./post_build.sh
