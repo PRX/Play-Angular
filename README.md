@@ -1,3 +1,9 @@
+| ⚠️ Legacy Project | 
+| :---- |
+| This project has been replaced by [Play-Next.js](https://github.com/PRX/Play-Next.js), and is no longer in development. |
+
+
+
 # PRX Embed Player
 
 Embeddable audio playback!
